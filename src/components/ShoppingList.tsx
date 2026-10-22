@@ -16,9 +16,12 @@ interface Props {
 
 export default function ShoppingList({ title, items, onToggle, onAdd, onRemove }: Props) {
   const [name, setName] = useState('')
+  // The selected chip is the active category: it filters which items are
+  // shown and is where a newly added item goes.
   const [section, setSection] = useState('fresh')
   const groups = groupBySection(items)
   const { done, total } = progress(items)
+  const activeGroup = groups.find((g) => g.section.id === section)
 
   function submit(e: React.FormEvent) {
     e.preventDefault()
@@ -58,11 +61,15 @@ export default function ShoppingList({ title, items, onToggle, onAdd, onRemove }
         <button type="submit">Add</button>
       </form>
 
-      {groups.map(({ section: sec, items: sectionItems }) => (
-        <div key={sec.id} className="section-block">
-          <h3>{sec.label}</h3>
+      {!activeGroup ? (
+        <p className="empty-section">
+          No items in this category yet. Add one above.
+        </p>
+      ) : (
+        <div className="section-block">
+          <h3>{activeGroup.section.label}</h3>
           <ul className="items">
-            {sectionItems.map((item) => (
+            {activeGroup.items.map((item) => (
               <li key={item.id} className={item.checked ? 'item checked' : 'item'}>
                 <label>
                   <input
@@ -93,7 +100,7 @@ export default function ShoppingList({ title, items, onToggle, onAdd, onRemove }
             ))}
           </ul>
         </div>
-      ))}
+      )}
     </section>
   )
 }

@@ -168,3 +168,8 @@ button {
   text-align: center;
   margin-top: 32px;
 }
+
+.empty-section {
+  color: #6b6257;
+  margin: 16px 0 4px;
+}
