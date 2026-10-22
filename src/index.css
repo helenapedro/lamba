@@ -161,3 +161,10 @@ button {
   font-size: 1.3rem;
   padding: 8px 10px;
 }
+
+.version {
+  color: #a3988a;
+  font-size: 0.75rem;
+  text-align: center;
+  margin-top: 32px;
+}
