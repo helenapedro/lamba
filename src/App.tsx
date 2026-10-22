@@ -18,7 +18,7 @@ export default function App() {
     return (
       <main>
         <h1>Lamba</h1>
-        <p>A carregar...</p>
+        <p>Loading...</p>
       </main>
     )
   }
@@ -27,9 +27,9 @@ export default function App() {
     return (
       <main>
         <h1>Lamba</h1>
-        <p>Listas de compras, produtos, inventário e receitas, tudo num só lugar.</p>
+        <p>Shopping lists, products, home inventory, and recipes in one place.</p>
         <button onClick={() => signInWithPopup(auth, googleProvider)}>
-          Entrar com Google
+          Sign in with Google
         </button>
       </main>
     )
@@ -38,16 +38,16 @@ export default function App() {
   return (
     <main>
       <h1>Lamba</h1>
-      <p>Olá, {user.displayName ?? user.email}.</p>
+      <p>Hello, {user.displayName ?? user.email}.</p>
       <div className="card">
-        <h2>Receita do dia</h2>
-        <p>Em breve: a receita diária aparece aqui (fase 1).</p>
+        <h2>Recipe of the day</h2>
+        <p>Coming soon: the daily recipe will appear here.</p>
       </div>
       <div className="card">
-        <h2>Lista de compras</h2>
-        <p>Em breve: a lista ativa com modo loja.</p>
+        <h2>Shopping list</h2>
+        <p>Coming soon: the active list with store mode.</p>
       </div>
-      <button onClick={() => signOut(auth)}>Sair</button>
+      <button onClick={() => signOut(auth)}>Sign out</button>
     </main>
   )
 }
