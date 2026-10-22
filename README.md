@@ -1,5 +1,6 @@
 # Lamba
 
+
 A personal kitchen companion app: shopping lists, a product library with
 photos and keep-or-skip verdicts, home inventory, and recipes, including a
 daily recipe suggestion.
