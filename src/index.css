@@ -11,7 +11,7 @@ body {
 main {
   max-width: 640px;
   margin: 0 auto;
-  padding: 24px 16px;
+  padding: 24px 16px 48px;
 }
 
 button {
@@ -30,4 +30,111 @@ button {
   border-radius: 14px;
   padding: 16px;
   margin: 12px 0;
+}
+
+/* Shopping list (store mode: big tap targets) */
+.shopping {
+  background: #fff;
+  border: 1px solid #e5ded2;
+  border-radius: 14px;
+  padding: 16px;
+  margin: 12px 0;
+}
+
+.shopping .progress {
+  color: #6b6257;
+  margin-top: -6px;
+}
+
+.add-form {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin: 12px 0 4px;
+}
+
+.add-form input[type='text'],
+.add-form input:not([type]) {
+  flex: 1 1 160px;
+}
+
+.add-form input,
+.add-form select {
+  font: inherit;
+  padding: 10px;
+  border-radius: 10px;
+  border: 1px solid #c9c0b2;
+  background: #fff;
+}
+
+.section-block h3 {
+  margin: 20px 0 6px;
+  font-size: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #6b6257;
+}
+
+.items {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border-bottom: 1px solid #eee7db;
+  padding: 6px 0;
+}
+
+.item label {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+  min-height: 48px;
+  cursor: pointer;
+}
+
+.item input[type='checkbox'] {
+  width: 26px;
+  height: 26px;
+  accent-color: #1a1a1a;
+  flex-shrink: 0;
+}
+
+.item-main {
+  display: flex;
+  flex-direction: column;
+}
+
+.item-name {
+  font-size: 1.05rem;
+}
+
+.item-sub {
+  color: #6b6257;
+  font-size: 0.85rem;
+}
+
+.item-note {
+  color: #8a7f6e;
+  font-size: 0.8rem;
+  font-style: italic;
+}
+
+.item.checked .item-name,
+.item.checked .item-sub {
+  text-decoration: line-through;
+  opacity: 0.55;
+}
+
+.item .remove {
+  background: transparent;
+  color: #8a7f6e;
+  border: none;
+  font-size: 1.3rem;
+  padding: 8px 10px;
 }
