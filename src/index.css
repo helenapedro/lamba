@@ -67,6 +67,29 @@ button {
   background: #fff;
 }
 
+.section-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  flex: 1 1 100%;
+  order: 3;
+}
+
+.chip {
+  background: #fff;
+  color: #1a1a1a;
+  border: 1px solid #c9c0b2;
+  border-radius: 999px;
+  padding: 8px 12px;
+  font-size: 0.9rem;
+}
+
+.chip.active {
+  background: #1a1a1a;
+  color: #faf7f2;
+  border-color: #1a1a1a;
+}
+
 .section-block h3 {
   margin: 20px 0 6px;
   font-size: 1rem;

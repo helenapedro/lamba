@@ -41,17 +41,20 @@ export default function ShoppingList({ title, items, onToggle, onAdd, onRemove }
           placeholder="Add item (English name)"
           aria-label="Item name"
         />
-        <select
-          value={section}
-          onChange={(e) => setSection(e.target.value)}
-          aria-label="Section"
-        >
+        <div className="section-chips" role="radiogroup" aria-label="Section">
           {SECTIONS.map((s) => (
-            <option key={s.id} value={s.id}>
+            <button
+              key={s.id}
+              type="button"
+              role="radio"
+              aria-checked={section === s.id}
+              className={section === s.id ? 'chip active' : 'chip'}
+              onClick={() => setSection(s.id)}
+            >
               {s.label}
-            </option>
+            </button>
           ))}
-        </select>
+        </div>
         <button type="submit">Add</button>
       </form>
 
