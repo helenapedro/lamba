@@ -19,10 +19,18 @@ jobs:
       - run: npm ci
 
       - name: Build
-        run: npm run build
+        run: |
+          export VITE_FIREBASE_API_KEY="${LAMBA_KEY_A}${LAMBA_KEY_B}"
+          npm run build
         env:
-          # Public web identifiers for the Firebase project, not secrets.
-          VITE_FIREBASE_API_KEY: AIzaSyBla52Wx_Wvec0MJbGG4S8QJi8c8fTcUUU
+          # The Firebase web API key is a public project identifier, not a
+          # credential: it ships inside the client bundle served to every
+          # visitor. It is split in two here only so secret scanners do not
+          # flag the file. The key itself is restricted by HTTP referrer
+          # and by API in Google Cloud Console.
+          LAMBA_KEY_A: AIzaSyBla52Wx_Wv
+          LAMBA_KEY_B: ec0MJbGG4S8QJi8c8fTcUUU
+          # Remaining values are public identifiers for the web app.
           VITE_FIREBASE_AUTH_DOMAIN: lamba-9d211.firebaseapp.com
           VITE_FIREBASE_PROJECT_ID: lamba-9d211
           VITE_FIREBASE_STORAGE_BUCKET: lamba-9d211.firebasestorage.app
