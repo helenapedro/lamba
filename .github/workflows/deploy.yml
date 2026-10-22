@@ -1,0 +1,41 @@
+name: Deploy Lamba to Firebase
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - name: Build
+        run: npm run build
+        env:
+          # Public web identifiers for the Firebase project, not secrets.
+          VITE_FIREBASE_API_KEY: AIzaSyBla52Wx_Wvec0MJbGG4S8QJi8c8fTcUUU
+          VITE_FIREBASE_AUTH_DOMAIN: lamba-9d211.firebaseapp.com
+          VITE_FIREBASE_PROJECT_ID: lamba-9d211
+          VITE_FIREBASE_STORAGE_BUCKET: lamba-9d211.firebasestorage.app
+          VITE_FIREBASE_MESSAGING_SENDER_ID: '989305041180'
+          VITE_FIREBASE_APP_ID: 1:989305041180:web:c185d42fc17856dcba0ad9
+
+      - name: Write service account key
+        env:
+          SA: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+        run: printf '%s' "$SA" > "$RUNNER_TEMP/sa.json"
+
+      - name: Deploy Hosting and Firestore rules
+        env:
+          GOOGLE_APPLICATION_CREDENTIALS: ${{ runner.temp }}/sa.json
+        run: |
+          npm install -g firebase-tools
+          firebase deploy --only hosting,firestore:rules --project lamba-9d211 --non-interactive
