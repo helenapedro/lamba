@@ -10,7 +10,7 @@ export default defineConfig({
       manifest: {
         name: 'Lamba',
         short_name: 'Lamba',
-        description: 'Listas de compras, produtos, inventário e receitas da Helena.',
+        description: 'Kitchen companion: shopping lists, products, home inventory, and recipes.',
         theme_color: '#1a1a1a',
         background_color: '#faf7f2',
         display: 'standalone',
