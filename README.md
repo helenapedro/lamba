@@ -16,6 +16,10 @@ daily recipe suggestion.
 
 Access is restricted to the owner account through Firestore security rules.
 
+Implemented so far: Google sign-in, a Firestore shopping list with a
+category filter, and saved recipes with a recipe of the day. Product
+photos and home inventory are still to come.
+
 ## Development
 
 ```bash

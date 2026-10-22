@@ -2,12 +2,16 @@ import { useEffect, useState } from 'react'
 import { onAuthStateChanged, signInWithPopup, signOut, type User } from 'firebase/auth'
 import { auth, googleProvider } from './firebase'
 import { useShopping } from './hooks/useShopping'
+import { useRecipes } from './hooks/useRecipes'
 import ShoppingList from './components/ShoppingList'
+import RecipeOfDay from './components/RecipeOfDay'
+import Recipes from './components/Recipes'
 
 export default function App() {
   const [user, setUser] = useState<User | null>(null)
   const [authLoading, setAuthLoading] = useState(true)
   const shopping = useShopping(user)
+  const recipesState = useRecipes(user)
 
   useEffect(() => {
     const unsub = onAuthStateChanged(auth, (u) => {
@@ -34,7 +38,7 @@ export default function App() {
         <button onClick={() => signInWithPopup(auth, googleProvider)}>
           Sign in with Google
         </button>
-        <p className="version">Lamba v0.4.0</p>
+        <p className="version">Lamba v0.5.0</p>
       </main>
     )
   }
@@ -44,10 +48,7 @@ export default function App() {
       <h1>Lamba</h1>
       <p>Hello, {user.displayName ?? user.email}.</p>
 
-      <div className="card">
-        <h2>Recipe of the day</h2>
-        <p>Coming soon: the daily recipe will appear here.</p>
-      </div>
+      <RecipeOfDay recipes={recipesState.recipes} />
 
       {shopping.loading || !shopping.list ? (
         <div className="card">
@@ -64,8 +65,21 @@ export default function App() {
         />
       )}
 
+      {recipesState.loading ? (
+        <div className="card">
+          <h2>Recipes</h2>
+          <p>Loading your recipes...</p>
+        </div>
+      ) : (
+        <Recipes
+          recipes={recipesState.recipes}
+          onAdd={recipesState.addRecipe}
+          onRemove={recipesState.removeRecipe}
+        />
+      )}
+
       <button onClick={() => signOut(auth)}>Sign out</button>
-      <p className="version">Lamba v0.4.0</p>
+      <p className="version">Lamba v0.5.0</p>
     </main>
   )
 }
