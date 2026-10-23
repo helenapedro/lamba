@@ -7,7 +7,9 @@
 // The owner uid is never printed: Actions logs on a public repo are
 // public.
 import { existsSync, readFileSync } from 'node:fs'
-import admin from 'firebase-admin'
+import { applicationDefault, initializeApp } from 'firebase-admin/app'
+import { getAuth } from 'firebase-admin/auth'
+import { FieldValue, getFirestore } from 'firebase-admin/firestore'
 
 function stage(msg) {
   console.log(`[sync] ${msg}`)
@@ -26,23 +28,23 @@ try {
   }
   stage(`recipe loaded: "${recipe.title}" (${recipe.date})`)
 
-  admin.initializeApp({
-    credential: admin.credential.applicationDefault(),
+  initializeApp({
+    credential: applicationDefault(),
     projectId: 'lamba-9d211',
   })
   stage('firebase app initialized')
 
-  const { users } = await admin.auth().listUsers(2)
+  const { users } = await getAuth().listUsers(2)
   stage(`auth users found: ${users.length}`)
   if (users.length !== 1) {
     throw new Error(`Expected exactly 1 app user, found ${users.length}`)
   }
 
-  const ref = admin
-    .firestore()
-    .doc(`users/${users[0].uid}/recipes/daily-${recipe.date}`)
+  const ref = getFirestore().doc(
+    `users/${users[0].uid}/recipes/daily-${recipe.date}`,
+  )
   await ref.set(
-    { ...recipe, updatedAt: admin.firestore.FieldValue.serverTimestamp() },
+    { ...recipe, updatedAt: FieldValue.serverTimestamp() },
     { merge: true },
   )
   stage('recipe written to Firestore')
