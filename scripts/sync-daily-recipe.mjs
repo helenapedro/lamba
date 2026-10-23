@@ -6,33 +6,47 @@
 //
 // The owner uid is never printed: Actions logs on a public repo are
 // public.
-import { readFileSync } from 'node:fs'
+import { existsSync, readFileSync } from 'node:fs'
 import admin from 'firebase-admin'
 
-const recipe = JSON.parse(
-  readFileSync(new URL('../data/daily-recipe.json', import.meta.url), 'utf8'),
-)
-if (!recipe.title || !recipe.date) {
-  console.error('data/daily-recipe.json needs at least title and date')
-  process.exit(1)
+function stage(msg) {
+  console.log(`[sync] ${msg}`)
 }
 
-admin.initializeApp({
-  credential: admin.credential.applicationDefault(),
-  projectId: 'lamba-9d211',
-})
+try {
+  stage(`node ${process.version}`)
+  const credPath = process.env.GOOGLE_APPLICATION_CREDENTIALS
+  stage(`credentials file present: ${credPath ? existsSync(credPath) : false}`)
 
-const { users } = await admin.auth().listUsers(2)
-if (users.length !== 1) {
-  console.error(`Expected exactly 1 app user, found ${users.length}`)
+  const recipe = JSON.parse(
+    readFileSync(new URL('../data/daily-recipe.json', import.meta.url), 'utf8'),
+  )
+  if (!recipe.title || !recipe.date) {
+    throw new Error('data/daily-recipe.json needs at least title and date')
+  }
+  stage(`recipe loaded: "${recipe.title}" (${recipe.date})`)
+
+  admin.initializeApp({
+    credential: admin.credential.applicationDefault(),
+    projectId: 'lamba-9d211',
+  })
+  stage('firebase app initialized')
+
+  const { users } = await admin.auth().listUsers(2)
+  stage(`auth users found: ${users.length}`)
+  if (users.length !== 1) {
+    throw new Error(`Expected exactly 1 app user, found ${users.length}`)
+  }
+
+  const ref = admin
+    .firestore()
+    .doc(`users/${users[0].uid}/recipes/daily-${recipe.date}`)
+  await ref.set(
+    { ...recipe, updatedAt: admin.firestore.FieldValue.serverTimestamp() },
+    { merge: true },
+  )
+  stage('recipe written to Firestore')
+} catch (err) {
+  console.error(`[sync] FAILED: ${err?.code ?? ''} ${err?.message ?? err}`)
   process.exit(1)
 }
-
-const ref = admin
-  .firestore()
-  .doc(`users/${users[0].uid}/recipes/daily-${recipe.date}`)
-await ref.set(
-  { ...recipe, updatedAt: admin.firestore.FieldValue.serverTimestamp() },
-  { merge: true },
-)
-console.log(`Synced daily recipe "${recipe.title}" (${recipe.date})`)
