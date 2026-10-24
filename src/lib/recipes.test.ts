@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest'
 import {
   latestDaily,
   recipeOn,
+  recipesInSlot,
   sortRecipes,
   todayStr,
   type Recipe,
@@ -52,6 +53,18 @@ describe('latestDaily', () => {
   })
 })
 
+describe('recipesInSlot', () => {
+  it('filters by meal slot, newest first', () => {
+    expect(recipesInSlot(recipes, 'dinner').map((r) => r.title)).toEqual([
+      'Future',
+      'Today',
+      'Newer',
+      'Old',
+      'Standing',
+    ])
+    expect(recipesInSlot(recipes, 'breakfast')).toEqual([])
+  })
+})
 describe('sortRecipes', () => {
   it('puts dated recipes newest first, undated last', () => {
     expect(sortRecipes(recipes).map((r) => r.title)).toEqual([

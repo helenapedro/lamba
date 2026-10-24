@@ -63,6 +63,11 @@ export function sortRecipes(recipes: Recipe[]): Recipe[] {
   })
 }
 
+/** Recipes of one meal slot, newest first. The slot filter in the UI. */
+export function recipesInSlot(recipes: Recipe[], slot: string): Recipe[] {
+  return sortRecipes(recipes).filter((r) => r.mealSlot === slot)
+}
+
 /** Human label for a recipe date, e.g. "Oct 22". */
 export function dateLabel(date: string): string {
   return new Date(`${date}T12:00:00`).toLocaleDateString('en-US', {

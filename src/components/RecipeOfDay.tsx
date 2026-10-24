@@ -33,7 +33,11 @@ export default function RecipeOfDay({ recipes }: Props) {
       <p className="recipe-title">{recipe.title}</p>
       <p className="recipe-meta">
         {slotLabel(recipe.mealSlot)} · for {recipe.servings}
-        {!todays && recipe.date ? ` · from ${dateLabel(recipe.date)}` : ''}
+        {recipe.date
+          ? todays
+            ? ` · ${dateLabel(recipe.date)}`
+            : ` · from ${dateLabel(recipe.date)}`
+          : ''}
       </p>
       {recipe.pairing && <p className="recipe-pairing">Pairs with: {recipe.pairing}</p>}
     </div>

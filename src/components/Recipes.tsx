@@ -2,8 +2,8 @@ import { useState, type FormEvent } from 'react'
 import {
   MEAL_SLOTS,
   dateLabel,
+  recipesInSlot,
   slotLabel,
-  sortRecipes,
   type NewRecipe,
   type Recipe,
 } from '../lib/recipes'
@@ -42,7 +42,7 @@ export default function Recipes({ recipes, onAdd, onRemove }: Props) {
     setSteps('')
   }
 
-  const sorted = sortRecipes(recipes)
+  const visible = recipesInSlot(recipes, slot)
 
   return (
     <section className="card">
@@ -92,8 +92,11 @@ export default function Recipes({ recipes, onAdd, onRemove }: Props) {
         <button type="submit">Add recipe</button>
       </form>
 
-      <ul className="items">
-        {sorted.map((recipe) => {
+      {visible.length === 0 ? (
+        <p className="empty-section">No recipes in this category yet.</p>
+      ) : (
+        <ul className="items">
+          {visible.map((recipe) => {
           const expanded = expandedId === recipe.id
           return (
             <li key={recipe.id} className="recipe-item">
@@ -155,7 +158,8 @@ export default function Recipes({ recipes, onAdd, onRemove }: Props) {
             </li>
           )
         })}
-      </ul>
+        </ul>
+      )}
     </section>
   )
 }
