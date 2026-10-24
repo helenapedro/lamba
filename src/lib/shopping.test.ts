@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import {
+  SECTIONS,
   groupBySection,
   progress,
   sortItems,
@@ -49,5 +50,11 @@ describe('progress', () => {
     expect(
       progress([item({ checked: true }), item({}), item({ checked: true })]),
     ).toEqual({ done: 2, total: 3 })
+  })
+})
+
+describe('SECTIONS', () => {
+  it('includes the Household section for non-food items', () => {
+    expect(SECTIONS.find((s) => s.id === 'household')?.label).toBe('Household')
   })
 })

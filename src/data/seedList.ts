@@ -98,4 +98,11 @@ export const SEED_ITEMS: SeedItem[] = [
   { section: 'freezer', nameEn: 'Frozen Mango' },
   { section: 'freezer', nameEn: 'Edamame' },
   { section: 'freezer', nameEn: 'Frozen Peas' },
+
+  // Household (non-food, added Oct 24)
+  { section: 'household', nameEn: 'Disinfecting Wipes', namePt: 'Toalhetes desinfetantes multiusos' },
+  { section: 'household', nameEn: 'Paper Towels', namePt: 'Papel toalha' },
+  { section: 'household', nameEn: 'Laundry Detergent Pods', namePt: 'Detergente para roupa (cápsulas)', brand: 'Tide PODS Free & Gentle', quantity: 'Unscented · 57 pacs', notes: 'The one already used at home' },
+  { section: 'household', nameEn: 'Dishwasher Detergent Pods', namePt: 'Tabletes para a máquina de lavar louça' },
+  { section: 'household', nameEn: 'Toilet Paper', namePt: 'Papel higiénico' },
 ]

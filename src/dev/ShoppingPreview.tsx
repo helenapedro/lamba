@@ -14,6 +14,7 @@ const INITIAL_ITEMS: ShoppingItem[] = [
   { id: 'p1', listId: 'preview', section: 'base', nameEn: 'Olive Oil', checked: false },
   { id: 'p2', listId: 'preview', section: 'fresh', nameEn: 'Lemons', checked: false },
   { id: 'p3', listId: 'preview', section: 'freezer', nameEn: 'Frozen Peas', checked: true },
+  { id: 'p4', listId: 'preview', section: 'household', nameEn: 'Toilet Paper', checked: false },
 ]
 
 const INITIAL_RECIPES: Recipe[] = [

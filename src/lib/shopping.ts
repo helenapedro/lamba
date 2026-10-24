@@ -23,6 +23,7 @@ export const SECTIONS: SectionDef[] = [
   { id: 'pantry', label: 'Monthly pantry' },
   { id: 'fresh', label: 'Weekly fresh' },
   { id: 'freezer', label: 'Freezer' },
+  { id: 'household', label: 'Household' },
   { id: 'other', label: 'Other' },
 ]
 
