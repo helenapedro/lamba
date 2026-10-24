@@ -17,9 +17,10 @@ daily recipe suggestion.
 Access is restricted to the owner account through Firestore security rules.
 
 Implemented so far: Google sign-in, a Firestore shopping list with a
-category filter, saved recipes with a recipe of the day that syncs daily,
-and a product registry with the brand bought for each product and a
-keep / moderation / substitute verdict. Home inventory is still to come.
+category filter (now including a Household category for non-food items),
+saved recipes with a recipe of the day that syncs daily, and a product
+registry with the brand bought for each product and a keep / moderation /
+substitute verdict. Home inventory is still to come.
 
 ## Development
 
