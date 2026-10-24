@@ -2,8 +2,10 @@ import { useState } from 'react'
 import ShoppingList from '../components/ShoppingList'
 import RecipeOfDay from '../components/RecipeOfDay'
 import Recipes from '../components/Recipes'
+import Products from '../components/Products'
 import type { ShoppingItem } from '../lib/shopping'
 import { todayStr, type Recipe } from '../lib/recipes'
+import type { Product } from '../lib/products'
 
 // Dev-only preview with in-memory state, so the UI can be clicked through
 // in a browser without Firebase auth. Reachable only in `npm run dev` at
@@ -48,10 +50,32 @@ const INITIAL_RECIPES: Recipe[] = [
 
 let nextItemId = 4
 let nextRecipeId = 4
+let nextProductId = 4
+
+const INITIAL_PRODUCTS: Product[] = [
+  {
+    id: 'pr1',
+    nameEn: 'Olive Oil',
+    namePt: 'Azeite',
+    brand: 'Pompeian Organic Extra Virgin Olive Oil (Smooth)',
+    category: 'base',
+    verdict: 'keep',
+    notes: 'Store away from heat and light.',
+  },
+  { id: 'pr2', nameEn: 'Eggs', category: 'base', verdict: 'keep' },
+  {
+    id: 'pr3',
+    nameEn: 'Linguica',
+    brand: 'Silva Linguica Portuguese Sausage',
+    category: 'fresh',
+    verdict: 'moderation',
+  },
+]
 
 export default function ShoppingPreview() {
   const [items, setItems] = useState<ShoppingItem[]>(INITIAL_ITEMS)
   const [recipes, setRecipes] = useState<Recipe[]>(INITIAL_RECIPES)
+  const [products, setProducts] = useState<Product[]>(INITIAL_PRODUCTS)
 
   return (
     <main>
@@ -85,6 +109,18 @@ export default function ShoppingPreview() {
           setRecipes((prev) => [...prev, { ...recipe, id: `r${nextRecipeId++}` }])
         }
         onRemove={(recipe) => setRecipes((prev) => prev.filter((r) => r.id !== recipe.id))}
+      />
+      <Products
+        products={products}
+        onAdd={(product) =>
+          setProducts((prev) => [...prev, { ...product, id: `pr${nextProductId++}` }])
+        }
+        onUpdateBrand={(product, brand) =>
+          setProducts((prev) =>
+            prev.map((p) => (p.id === product.id ? { ...p, brand } : p)),
+          )
+        }
+        onRemove={(product) => setProducts((prev) => prev.filter((p) => p.id !== product.id))}
       />
     </main>
   )
