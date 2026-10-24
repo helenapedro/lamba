@@ -105,4 +105,5 @@ export const SEED_ITEMS: SeedItem[] = [
   { section: 'household', nameEn: 'Laundry Detergent Pods', namePt: 'Detergente para roupa (cápsulas)', brand: 'Tide PODS Free & Gentle', quantity: 'Unscented · 57 pacs', notes: 'The one already used at home' },
   { section: 'household', nameEn: 'Dishwasher Detergent Pods', namePt: 'Tabletes para a máquina de lavar louça' },
   { section: 'household', nameEn: 'Toilet Paper', namePt: 'Papel higiénico' },
+  { section: 'household', nameEn: 'Body Wash', namePt: 'Gel de banho', brand: 'Aveeno Daily Moisturizing' },
 ]
