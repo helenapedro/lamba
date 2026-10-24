@@ -1,1 +1,23 @@
-{"date":"2026-10-23","ingredients":["4 eggs","2 cups fresh spinach","1 cup cherry tomatoes, cortados ao meio","1/4 cup feta cheese, esfarelado","1 tbsp olive oil","Salt e black pepper a gosto"],"mealSlot":"breakfast","pairing":"Torrada de pão integral com pasta de amêndoa","servings":2,"sourceUrl":"https://www.tuasaude.com/en/benefits-of-spinach/","steps":"Refoga o espinafre e os tomates no azeite por 2 minutos. Bate os ovos com sal e pimenta, despeja por cima, espalha o feta e cozinha em fogo baixo até firmar (~5 min). Se quiseres, vira ou dobra a omelete no final.","title":"Omelete de espinafre com tomate cereja e queijo feta","why":"O espinafre tem ferro (2,71 mg por 100 g), folato, vitaminas A, C e E, e luteína; os ovos trazem proteína de alta qualidade. O tomate soma vitamina C, que ajuda o corpo a absorver o ferro do espinafre."}
+{
+  "date": "2026-10-24",
+  "title": "Espetinhos de frango com abacaxi grelhado e pimentão",
+  "mealSlot": "dinner",
+  "pairing": "Salada de pepino com tomate e vinagrete de limão",
+  "servings": 2,
+  "why": "O peito de frango dá proteína magra que sacia sem pesar, o abacaxi traz vitamina C (cerca de 47,8 mg por 100 g) e bromelaína, que ajuda na digestão das proteínas, e o pimentão vermelho soma mais vitamina C, fibras e cor ao prato.",
+  "ingredients": [
+    "1 lb skinless chicken breast, em cubos",
+    "1 1/2 cups fresh pineapple chunks",
+    "1 red bell pepper, em pedaços grandes",
+    "1/2 red onion, em pedaços grandes",
+    "2 tbsp olive oil",
+    "Suco de 1 lime",
+    "2 cloves fresh garlic, picados",
+    "1 tsp paprika",
+    "1/2 tsp cumin",
+    "Salt e black pepper a gosto",
+    "Fresh cilantro picado (opcional)"
+  ],
+  "steps": "Mistura o azeite, o suco de limão, o alho, a páprica, o cominho, o sal e a pimenta e marina o frango por 15 minutos. Monta os espetinhos alternando frango, abacaxi, pimentão e cebola roxa. Grelha em frigideira quente ou na grelha por 10 a 12 minutos, virando até o frango ficar dourado e cozido por dentro. Descansa 2 minutos, salpica coentro e serve com a salada.",
+  "sourceUrl": "https://www.tuasaude.com/en/pineapple-benefits/"
+}
