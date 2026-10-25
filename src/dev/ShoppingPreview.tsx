@@ -10,7 +10,7 @@ import {
   normalizeName,
   parseShoppingQuantity,
 } from '../lib/shopping'
-import { todayStr, type Recipe } from '../lib/recipes'
+import { dayRecipe, todayStr, type Recipe } from '../lib/recipes'
 import type { Product } from '../lib/products'
 import type { InventoryItem } from '../lib/inventory'
 import { locationForSection, sectionForLocation } from '../lib/inventory'
@@ -34,6 +34,7 @@ const INITIAL_RECIPES: Recipe[] = [
     pairing: 'Purê de batata-doce com manteiga',
     servings: 2,
     why: 'Proteína magra com selênio e vitamina B12.',
+    fruit: 'Peras, maçãs e uvas no auge em outubro no Noroeste do Pacífico.',
     ingredients: ['2 tilapia fillets', '1 lemon', '3 garlic cloves'],
     steps: 'Asse a 425°F por 12 a 15 minutos.',
     substitutions: 'Tilápia por cod.',
@@ -89,40 +90,76 @@ const INITIAL_PRODUCTS: Product[] = [
   },
 ]
 
+type View = 'home' | 'shopping' | 'recipes' | 'products' | 'inventory'
+
+const VIEWS: { id: View; label: string }[] = [
+  { id: 'home', label: 'Home' },
+  { id: 'shopping', label: 'Shopping' },
+  { id: 'recipes', label: 'Recipes' },
+  { id: 'products', label: 'Products' },
+  { id: 'inventory', label: 'At home' },
+]
+
 export default function ShoppingPreview() {
   const [items, setItems] = useState<ShoppingItem[]>(INITIAL_ITEMS)
   const [recipes, setRecipes] = useState<Recipe[]>(INITIAL_RECIPES)
   const [products, setProducts] = useState<Product[]>(INITIAL_PRODUCTS)
   const [inventory, setInventory] = useState<InventoryItem[]>(INITIAL_INVENTORY)
   const [query, setQuery] = useState('')
+  const [view, setView] = useState<View>('home')
+  const { recipe: homeRecipe, isToday } = dayRecipe(recipes, todayStr())
 
   return (
     <main>
       <h1>Preview (dev)</h1>
-      <div className="search-bar">
-        <input
-          type="search"
-          aria-label="Search everything"
-          placeholder="Search recipes, products, inventory, shopping"
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-        />
-        {query && (
-          <button type="button" onClick={() => setQuery('')}>
-            Clear search
+      <nav className="navbar" aria-label="Sections">
+        {VIEWS.map((v) => (
+          <button
+            key={v.id}
+            type="button"
+            className={view === v.id ? 'active' : undefined}
+            aria-current={view === v.id ? 'page' : undefined}
+            onClick={() => setView(v.id)}
+          >
+            {v.label}
           </button>
-        )}
-      </div>
-      {!query.trim() && (
-        <RecipeOfDay
-          recipes={recipes}
-          onToggleFavorite={(recipe, favorite) =>
-            setRecipes((prev) =>
-              prev.map((r) => (r.id === recipe.id ? { ...r, favorite } : r)),
-            )
-          }
-        />
+        ))}
+      </nav>
+      {view !== 'home' && (
+        <div className="search-bar">
+          <input
+            type="search"
+            aria-label="Search everything"
+            placeholder="Search recipes, products, inventory, shopping"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+          />
+          {query && (
+            <button type="button" onClick={() => setQuery('')}>
+              Clear search
+            </button>
+          )}
+        </div>
       )}
+      {view === 'home' && (
+        <>
+          <RecipeOfDay
+            recipes={recipes}
+            onToggleFavorite={(recipe, favorite) =>
+              setRecipes((prev) =>
+                prev.map((r) => (r.id === recipe.id ? { ...r, favorite } : r)),
+              )
+            }
+          />
+          {isToday && homeRecipe?.fruit && (
+            <div className="card">
+              <h2>Seasonal fruit</h2>
+              <p>{homeRecipe.fruit}</p>
+            </div>
+          )}
+        </>
+      )}
+      {view === 'shopping' && (
       <ShoppingList
         title="Preview list"
         items={items}
@@ -191,6 +228,8 @@ export default function ShoppingPreview() {
         }
         query={query}
       />
+      )}
+      {view === 'recipes' && (
       <Recipes
         recipes={recipes}
         onAdd={(recipe) =>
@@ -204,6 +243,8 @@ export default function ShoppingPreview() {
         }
         query={query}
       />
+      )}
+      {view === 'products' && (
       <Products
         products={products}
         onAdd={(product) =>
@@ -217,6 +258,8 @@ export default function ShoppingPreview() {
         onRemove={(product) => setProducts((prev) => prev.filter((p) => p.id !== product.id))}
         query={query}
       />
+      )}
+      {view === 'inventory' && (
       <Inventory
         items={inventory}
         onAdd={(item) =>
@@ -253,6 +296,7 @@ export default function ShoppingPreview() {
         }
         query={query}
       />
+      )}
       <div className="button-row">
         <ExportButton
           shoppingTitle="Preview list"

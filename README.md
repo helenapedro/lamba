@@ -35,7 +35,10 @@ shopping checks without moving anything into inventory. Items can also
 be marked as in cart (found at the store or in the pickup cart, not yet
 bought): they sort between still to find and bought, show an In cart
 note and a progress count, are skipped by Shopping done, and lose the
-mark when checked as bought.
+mark when checked as bought. A navbar (Home, Shopping, Recipes,
+Products, At home) keeps the home page to the recipe of the day plus a
+seasonal fruit card, with the other sections one tap away; search
+appears on those views, not on home.
 
 ## Assistant sync
 

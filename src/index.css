@@ -24,6 +24,26 @@ button {
   cursor: pointer;
 }
 
+.navbar {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin: 12px 0;
+}
+
+.navbar button {
+  background: transparent;
+  color: #1a1a1a;
+  border-color: #d8cfc0;
+  padding: 8px 12px;
+}
+
+.navbar button.active {
+  background: #1a1a1a;
+  color: #faf7f2;
+  border-color: #1a1a1a;
+}
+
 .card {
   background: #fff;
   border: 1px solid #e5ded2;

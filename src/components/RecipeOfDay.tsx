@@ -1,7 +1,6 @@
 import {
   dateLabel,
-  latestDaily,
-  recipeOn,
+  dayRecipe,
   slotLabel,
   todayStr,
   type Recipe,
@@ -17,8 +16,7 @@ interface Props {
 // The star marks it as a favorite, shared with the Recipes list.
 export default function RecipeOfDay({ recipes, onToggleFavorite }: Props) {
   const today = todayStr()
-  const todays = recipeOn(recipes, today)
-  const recipe = todays ?? latestDaily(recipes, today)
+  const { recipe, isToday } = dayRecipe(recipes, today)
 
   if (!recipe) {
     return (
@@ -47,7 +45,7 @@ export default function RecipeOfDay({ recipes, onToggleFavorite }: Props) {
       <p className="recipe-meta">
         {slotLabel(recipe.mealSlot)} · for {recipe.servings}
         {recipe.date
-          ? todays
+          ? isToday
             ? ` · ${dateLabel(recipe.date)}`
             : ` · from ${dateLabel(recipe.date)}`
           : ''}

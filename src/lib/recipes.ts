@@ -18,6 +18,8 @@ export interface Recipe {
   sourceUrl?: string
   date?: string
   favorite?: boolean
+  /** Seasonal fruit note that came with a daily recipe, if any. */
+  fruit?: string
 }
 
 export type NewRecipe = Omit<Recipe, 'id'>
@@ -52,6 +54,17 @@ export function latestDaily(recipes: Recipe[], date: string): Recipe | undefined
   return recipes
     .filter((r) => r.date && r.date <= date)
     .sort((a, b) => (b.date ?? '').localeCompare(a.date ?? ''))[0]
+}
+
+/** The recipe the home card shows: today's when set, else the most recent
+ * daily recipe. `isToday` tells whether the fruit note is current. */
+export function dayRecipe(
+  recipes: Recipe[],
+  date: string,
+): { recipe: Recipe | undefined; isToday: boolean } {
+  const todays = recipeOn(recipes, date)
+  if (todays) return { recipe: todays, isToday: true }
+  return { recipe: latestDaily(recipes, date), isToday: false }
 }
 
 /** Dated recipes first, newest first; undated ones after, by title. */

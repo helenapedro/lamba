@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import {
+  dayRecipe,
   favoriteRecipes,
   latestDaily,
   recipeOn,
@@ -51,6 +52,25 @@ describe('latestDaily', () => {
   it('ignores undated and future recipes', () => {
     expect(latestDaily(recipes, '2026-10-13')).toBeUndefined()
     expect(latestDaily(recipes, '2026-11-01')?.title).toBe('Today')
+  })
+})
+
+describe('dayRecipe', () => {
+  it('returns today with isToday true', () => {
+    const { recipe, isToday } = dayRecipe(recipes, '2026-10-22')
+    expect(recipe?.title).toBe('Today')
+    expect(isToday).toBe(true)
+  })
+  it('falls back to the most recent daily with isToday false', () => {
+    const { recipe, isToday } = dayRecipe(recipes, '2026-10-21')
+    expect(recipe?.title).toBe('Newer')
+    expect(isToday).toBe(false)
+  })
+  it('returns undefined when no daily recipe exists yet', () => {
+    expect(dayRecipe(recipes, '2026-10-13')).toEqual({
+      recipe: undefined,
+      isToday: false,
+    })
   })
 })
 

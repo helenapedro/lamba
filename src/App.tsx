@@ -12,6 +12,7 @@ import {
   type InventoryItem,
 } from './lib/inventory'
 import { normalizeName, parseShoppingQuantity } from './lib/shopping'
+import { dayRecipe, todayStr } from './lib/recipes'
 import ShoppingList from './components/ShoppingList'
 import RecipeOfDay from './components/RecipeOfDay'
 import Recipes from './components/Recipes'
@@ -19,14 +20,29 @@ import Products from './components/Products'
 import Inventory from './components/Inventory'
 import ExportButton from './components/ExportButton'
 
+type View = 'home' | 'shopping' | 'recipes' | 'products' | 'inventory'
+
+const VIEWS: { id: View; label: string }[] = [
+  { id: 'home', label: 'Home' },
+  { id: 'shopping', label: 'Shopping' },
+  { id: 'recipes', label: 'Recipes' },
+  { id: 'products', label: 'Products' },
+  { id: 'inventory', label: 'At home' },
+]
+
 export default function App() {
   const [user, setUser] = useState<User | null>(null)
   const [authLoading, setAuthLoading] = useState(true)
   const [query, setQuery] = useState('')
+  const [view, setView] = useState<View>('home')
   const shopping = useShopping(user)
   const recipesState = useRecipes(user)
   const productsState = useProducts(user)
   const inventoryState = useInventory(user)
+  const { recipe: homeRecipe, isToday } = dayRecipe(
+    recipesState.recipes,
+    todayStr(),
+  )
 
   useEffect(() => {
     const unsub = onAuthStateChanged(auth, (u) => {
@@ -101,7 +117,7 @@ export default function App() {
         <button onClick={() => signInWithPopup(auth, googleProvider)}>
           Sign in with Google
         </button>
-        <p className="version">Lamba v1.4.0</p>
+        <p className="version">Lamba v1.5.0</p>
       </main>
     )
   }
@@ -111,29 +127,53 @@ export default function App() {
       <h1>Lamba</h1>
       <p>Hello, {user.displayName ?? user.email}.</p>
 
-      <div className="search-bar">
-        <input
-          type="search"
-          aria-label="Search everything"
-          placeholder="Search recipes, products, inventory, shopping"
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-        />
-        {query && (
-          <button type="button" onClick={() => setQuery('')}>
-            Clear search
+      <nav className="navbar" aria-label="Sections">
+        {VIEWS.map((v) => (
+          <button
+            key={v.id}
+            type="button"
+            className={view === v.id ? 'active' : undefined}
+            aria-current={view === v.id ? 'page' : undefined}
+            onClick={() => setView(v.id)}
+          >
+            {v.label}
           </button>
-        )}
-      </div>
+        ))}
+      </nav>
 
-      {!query.trim() && (
-        <RecipeOfDay
-          recipes={recipesState.recipes}
-          onToggleFavorite={recipesState.updateFavorite}
-        />
+      {view !== 'home' && (
+        <div className="search-bar">
+          <input
+            type="search"
+            aria-label="Search everything"
+            placeholder="Search recipes, products, inventory, shopping"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+          />
+          {query && (
+            <button type="button" onClick={() => setQuery('')}>
+              Clear search
+            </button>
+          )}
+        </div>
       )}
 
-      {shopping.loading || !shopping.list ? (
+      {view === 'home' && (
+        <>
+          <RecipeOfDay
+            recipes={recipesState.recipes}
+            onToggleFavorite={recipesState.updateFavorite}
+          />
+          {isToday && homeRecipe?.fruit && (
+            <div className="card">
+              <h2>Seasonal fruit</h2>
+              <p>{homeRecipe.fruit}</p>
+            </div>
+          )}
+        </>
+      )}
+
+      {view === 'shopping' && (shopping.loading || !shopping.list ? (
         <div className="card">
           <h2>Shopping list</h2>
           <p>Loading your list...</p>
@@ -151,9 +191,9 @@ export default function App() {
           canMove={!inventoryState.loading}
           query={query}
         />
-      )}
+      ))}
 
-      {recipesState.loading ? (
+      {view === 'recipes' && (recipesState.loading ? (
         <div className="card">
           <h2>Recipes</h2>
           <p>Loading your recipes...</p>
@@ -166,9 +206,9 @@ export default function App() {
           onToggleFavorite={recipesState.updateFavorite}
           query={query}
         />
-      )}
+      ))}
 
-      {productsState.loading ? (
+      {view === 'products' && (productsState.loading ? (
         <div className="card">
           <h2>Products</h2>
           <p>Loading your products...</p>
@@ -181,9 +221,9 @@ export default function App() {
           onRemove={productsState.removeProduct}
           query={query}
         />
-      )}
+      ))}
 
-      {inventoryState.loading ? (
+      {view === 'inventory' && (inventoryState.loading ? (
         <div className="card">
           <h2>At home</h2>
           <p>Loading your inventory...</p>
@@ -197,7 +237,7 @@ export default function App() {
           onAddToShopping={handleAddToShopping}
           query={query}
         />
-      )}
+      ))}
 
       <div className="button-row">
         {shopping.list && (
@@ -211,7 +251,7 @@ export default function App() {
         )}
         <button onClick={() => signOut(auth)}>Sign out</button>
       </div>
-      <p className="version">Lamba v1.4.0</p>
+      <p className="version">Lamba v1.5.0</p>
     </main>
   )
 }
