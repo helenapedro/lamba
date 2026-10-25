@@ -1,9 +1,9 @@
 # Lamba
 
 
-A personal kitchen companion app: shopping lists, a product library with
-photos and keep-or-skip verdicts, home inventory, and recipes, including a
-daily recipe suggestion.
+A personal kitchen companion app: shopping lists, a product registry with
+the brand bought and keep / moderation / substitute verdicts, home
+inventory, and recipes, including a daily recipe suggestion.
 
 ## Tech stack
 
@@ -21,6 +21,22 @@ category filter (now including a Household category for non-food items),
 saved recipes with a recipe of the day that syncs daily, and a product
 registry with the brand bought for each product and a keep / moderation /
 substitute verdict. Home inventory is still to come.
+
+## Assistant sync
+
+The assistant writes to the app through repo files that the deploy
+workflow syncs into Firestore with the deploy service account (never
+printed in logs, since Actions logs on a public repo are public):
+
+- `data/daily-recipe.json` → the recipe of the day (upsert by date).
+- `data/shopping-additions.json` → items added to the shopping list,
+  skipping names already present.
+- `data/products-sync.json` → product updates, matched by English name:
+  an existing product gets its brand (and notes) updated, a missing one
+  is added. Nothing is ever deleted by the sync.
+
+The corresponding scripts live in `scripts/sync-*.mjs` and run after the
+Hosting and Firestore rules deploy.
 
 ## Development
 

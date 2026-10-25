@@ -61,3 +61,8 @@ jobs:
         env:
           GOOGLE_APPLICATION_CREDENTIALS: ${{ runner.temp }}/sa.json
         run: node scripts/sync-shopping-additions.mjs
+
+      - name: Sync product updates to Firestore
+        env:
+          GOOGLE_APPLICATION_CREDENTIALS: ${{ runner.temp }}/sa.json
+        run: node scripts/sync-products.mjs
