@@ -44,7 +44,7 @@ export default function App() {
         <button onClick={() => signInWithPopup(auth, googleProvider)}>
           Sign in with Google
         </button>
-        <p className="version">Lamba v1.1.0</p>
+        <p className="version">Lamba v1.1.1</p>
       </main>
     )
   }
@@ -114,7 +114,7 @@ export default function App() {
       )}
 
       <button onClick={() => signOut(auth)}>Sign out</button>
-      <p className="version">Lamba v1.1.0</p>
+      <p className="version">Lamba v1.1.1</p>
     </main>
   )
 }

@@ -37,6 +37,10 @@ printed in logs, since Actions logs on a public repo are public):
 - `data/products-sync.json` → product updates, matched by English name:
   an existing product gets its brand (and notes) updated, a missing one
   is added. Nothing is ever deleted by the sync.
+- `data/recipes-sync.json` → recipe updates, matched by title: a missing
+  recipe is added, an existing one gets its content fields updated. The
+  sync never touches `favorite` (set in the app) or `date` (owned by the
+  daily-recipe channel), and never deletes.
 
 The corresponding scripts live in `scripts/sync-*.mjs` and run after the
 Hosting and Firestore rules deploy.
