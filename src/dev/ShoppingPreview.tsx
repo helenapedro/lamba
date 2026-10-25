@@ -5,9 +5,14 @@ import Recipes from '../components/Recipes'
 import Products from '../components/Products'
 import Inventory from '../components/Inventory'
 import type { ShoppingItem } from '../lib/shopping'
+import {
+  normalizeName,
+  parseShoppingQuantity,
+} from '../lib/shopping'
 import { todayStr, type Recipe } from '../lib/recipes'
 import type { Product } from '../lib/products'
 import type { InventoryItem } from '../lib/inventory'
+import { locationForSection, sectionForLocation } from '../lib/inventory'
 
 // Dev-only preview with in-memory state, so the UI can be clicked through
 // in a browser without Firebase auth. Reachable only in `npm run dev` at
@@ -54,12 +59,13 @@ const INITIAL_RECIPES: Recipe[] = [
 let nextItemId = 4
 let nextRecipeId = 4
 let nextProductId = 4
-let nextInventoryId = 4
+let nextInventoryId = 5
 
 const INITIAL_INVENTORY: InventoryItem[] = [
   { id: 'i1', nameEn: 'Olive Oil', quantity: 2, unit: 'bottles', location: 'pantry' },
   { id: 'i2', nameEn: 'Butter', quantity: 2, unit: 'blocks', location: 'fridge' },
   { id: 'i3', nameEn: 'Tilapia Fillets', quantity: 1, unit: 'lb', location: 'freezer' },
+  { id: 'i4', nameEn: 'Test Zero', quantity: 0, unit: 'un', location: 'pantry' },
 ]
 
 const INITIAL_PRODUCTS: Product[] = [
@@ -107,7 +113,7 @@ export default function ShoppingPreview() {
             prev.map((i) => (i.id === item.id ? { ...i, checked: !i.checked } : i)),
           )
         }
-        onAdd={(nameEn, section) =>
+        onAdd={(nameEn, section, quantity) =>
           setItems((prev) => [
             ...prev,
             {
@@ -115,11 +121,42 @@ export default function ShoppingPreview() {
               listId: 'preview',
               section,
               nameEn,
+              quantity,
               checked: false,
             },
           ])
         }
         onRemove={(item) => setItems((prev) => prev.filter((i) => i.id !== item.id))}
+        onShoppingDone={() => {
+          setInventory((prevInv) => {
+            let next = [...prevInv]
+            for (const item of items.filter((i) => i.checked)) {
+              const { quantity, unit } = parseShoppingQuantity(item.quantity)
+              const match = next.find(
+                (v) => normalizeName(v.nameEn) === normalizeName(item.nameEn),
+              )
+              if (match) {
+                next = next.map((v) =>
+                  v.id === match.id ? { ...v, quantity: v.quantity + quantity } : v,
+                )
+              } else {
+                next = [
+                  ...next,
+                  {
+                    id: `i${nextInventoryId++}`,
+                    nameEn: item.nameEn,
+                    quantity,
+                    unit,
+                    location: locationForSection(item.section),
+                  },
+                ]
+              }
+            }
+            return next
+          })
+          setItems((prev) => prev.map((i) => (i.checked ? { ...i, checked: false } : i)))
+        }}
+        canMove
       />
       <Recipes
         recipes={recipes}
@@ -158,6 +195,27 @@ export default function ShoppingPreview() {
           )
         }
         onRemove={(item) => setInventory((prev) => prev.filter((i) => i.id !== item.id))}
+        onAddToShopping={(item) =>
+          setItems((prev) => {
+            if (
+              prev.some(
+                (i) => normalizeName(i.nameEn) === normalizeName(item.nameEn),
+              )
+            ) {
+              return prev
+            }
+            return [
+              ...prev,
+              {
+                id: `p${nextItemId++}`,
+                listId: 'preview',
+                section: sectionForLocation(item.location),
+                nameEn: item.nameEn,
+                checked: false,
+              },
+            ]
+          })
+        }
       />
     </main>
   )

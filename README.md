@@ -23,7 +23,11 @@ registry with the brand bought for each product and a keep / moderation /
 substitute verdict, a home inventory by location (pantry, fridge,
 freezer, household) with adjustable quantities, seeded from recent
 purchases, and recipe favorites (a star on each recipe plus a favorites
-filter).
+filter). Shopping and inventory are connected: a Shopping done button
+moves checked items into inventory (adding to the matching item, or
+creating it in the mapped location) and unchecks them, items at zero in
+inventory offer to go back on the shopping list, and the shopping form
+takes quantities.
 
 ## Assistant sync
 

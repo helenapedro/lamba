@@ -2,6 +2,8 @@ import { describe, expect, it } from 'vitest'
 import {
   SECTIONS,
   groupBySection,
+  normalizeName,
+  parseShoppingQuantity,
   progress,
   sortItems,
   type ShoppingItem,
@@ -56,5 +58,26 @@ describe('progress', () => {
 describe('SECTIONS', () => {
   it('includes the Household section for non-food items', () => {
     expect(SECTIONS.find((s) => s.id === 'household')?.label).toBe('Household')
+  })
+})
+
+describe('normalizeName', () => {
+  it('ignores case and surrounding spaces', () => {
+    expect(normalizeName('  Olive Oil ')).toBe('olive oil')
+    expect(normalizeName('OLIVE OIL')).toBe('olive oil')
+  })
+})
+
+describe('parseShoppingQuantity', () => {
+  it('parses numbers with optional units', () => {
+    expect(parseShoppingQuantity('3')).toEqual({ quantity: 3, unit: 'un' })
+    expect(parseShoppingQuantity('2 lb')).toEqual({ quantity: 2, unit: 'lb' })
+    expect(parseShoppingQuantity('1 pack')).toEqual({ quantity: 1, unit: 'pack' })
+    expect(parseShoppingQuantity('2.5 kg')).toEqual({ quantity: 2.5, unit: 'kg' })
+  })
+  it('defaults to 1 un without a leading number', () => {
+    expect(parseShoppingQuantity(undefined)).toEqual({ quantity: 1, unit: 'un' })
+    expect(parseShoppingQuantity('')).toEqual({ quantity: 1, unit: 'un' })
+    expect(parseShoppingQuantity('a few')).toEqual({ quantity: 1, unit: 'un' })
   })
 })

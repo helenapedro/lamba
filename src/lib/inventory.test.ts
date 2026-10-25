@@ -1,9 +1,12 @@
 import { describe, expect, it } from 'vitest'
 import {
   formatQuantity,
+  inventoryMatch,
   itemsInLocation,
+  locationForSection,
   locationLabel,
   quantityStep,
+  sectionForLocation,
   type InventoryItem,
 } from './inventory'
 
@@ -64,5 +67,34 @@ describe('formatQuantity', () => {
     expect(formatQuantity(2, 'un')).toBe('2 un')
     expect(formatQuantity(1, 'lb')).toBe('1 lb')
     expect(formatQuantity(1.5, 'lb')).toBe('1.5 lb')
+  })
+})
+
+describe('locationForSection', () => {
+  it('maps shopping sections to inventory locations', () => {
+    expect(locationForSection('base')).toBe('pantry')
+    expect(locationForSection('pantry')).toBe('pantry')
+    expect(locationForSection('fresh')).toBe('fridge')
+    expect(locationForSection('freezer')).toBe('freezer')
+    expect(locationForSection('household')).toBe('household')
+    expect(locationForSection('other')).toBe('pantry')
+  })
+})
+
+describe('sectionForLocation', () => {
+  it('maps inventory locations back to shopping sections', () => {
+    expect(sectionForLocation('pantry')).toBe('pantry')
+    expect(sectionForLocation('fridge')).toBe('fresh')
+    expect(sectionForLocation('freezer')).toBe('freezer')
+    expect(sectionForLocation('household')).toBe('household')
+  })
+})
+
+describe('inventoryMatch', () => {
+  it('finds by name ignoring case and spaces', () => {
+    expect(inventoryMatch(items, 'olive oil')?.id).toBe('1')
+    expect(inventoryMatch(items, '  BUTTER ')).toBeDefined()
+    expect(inventoryMatch(items, 'Butter')?.id).toBe('2')
+    expect(inventoryMatch(items, 'Missing')).toBeUndefined()
   })
 })

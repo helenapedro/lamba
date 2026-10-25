@@ -5,6 +5,13 @@ import { useShopping } from './hooks/useShopping'
 import { useRecipes } from './hooks/useRecipes'
 import { useProducts } from './hooks/useProducts'
 import { useInventory } from './hooks/useInventory'
+import {
+  inventoryMatch,
+  locationForSection,
+  sectionForLocation,
+  type InventoryItem,
+} from './lib/inventory'
+import { normalizeName, parseShoppingQuantity } from './lib/shopping'
 import ShoppingList from './components/ShoppingList'
 import RecipeOfDay from './components/RecipeOfDay'
 import Recipes from './components/Recipes'
@@ -27,6 +34,46 @@ export default function App() {
     return unsub
   }, [])
 
+  // Shopping done: every checked item moves into inventory (adding to the
+  // matching item, or creating it in the mapped location), then unchecks.
+  // The running map keeps the totals right when two lines match one item.
+  async function handleShoppingDone() {
+    if (inventoryState.loading) return
+    const running = new Map<string, number>()
+    for (const item of shopping.items.filter((i) => i.checked)) {
+      const { quantity, unit } = parseShoppingQuantity(item.quantity)
+      const match = inventoryMatch(inventoryState.items, item.nameEn)
+      if (match) {
+        const next = (running.get(match.id) ?? match.quantity) + quantity
+        running.set(match.id, next)
+        await inventoryState.updateQuantity(match, next)
+      } else {
+        await inventoryState.addItem({
+          nameEn: item.nameEn,
+          namePt: item.namePt,
+          quantity,
+          unit,
+          location: locationForSection(item.section),
+          notes: 'Added from the shopping list.',
+        })
+      }
+      await shopping.toggleItem(item)
+    }
+  }
+
+  // An item at zero in inventory goes back on the shopping list, unless
+  // it is already there.
+  async function handleAddToShopping(item: InventoryItem) {
+    if (
+      shopping.items.some(
+        (i) => normalizeName(i.nameEn) === normalizeName(item.nameEn),
+      )
+    ) {
+      return
+    }
+    await shopping.addItem(item.nameEn, sectionForLocation(item.location))
+  }
+
   if (authLoading) {
     return (
       <main>
@@ -44,7 +91,7 @@ export default function App() {
         <button onClick={() => signInWithPopup(auth, googleProvider)}>
           Sign in with Google
         </button>
-        <p className="version">Lamba v1.1.3</p>
+        <p className="version">Lamba v1.2.0</p>
       </main>
     )
   }
@@ -71,6 +118,8 @@ export default function App() {
           onToggle={shopping.toggleItem}
           onAdd={shopping.addItem}
           onRemove={shopping.removeItem}
+          onShoppingDone={handleShoppingDone}
+          canMove={!inventoryState.loading}
         />
       )}
 
@@ -113,11 +162,12 @@ export default function App() {
           onAdd={inventoryState.addItem}
           onUpdateQuantity={inventoryState.updateQuantity}
           onRemove={inventoryState.removeItem}
+          onAddToShopping={handleAddToShopping}
         />
       )}
 
       <button onClick={() => signOut(auth)}>Sign out</button>
-      <p className="version">Lamba v1.1.3</p>
+      <p className="version">Lamba v1.2.0</p>
     </main>
   )
 }

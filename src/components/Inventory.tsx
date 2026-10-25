@@ -15,12 +15,20 @@ interface Props {
   onAdd: (item: NewInventoryItem) => void
   onUpdateQuantity: (item: InventoryItem, quantity: number) => void
   onRemove: (item: InventoryItem) => void
+  onAddToShopping: (item: InventoryItem) => void
 }
 
 // Home inventory: what Helena has at home, by location, with a quantity
 // she bumps up and down. The location chips filter the list, like the
-// shopping list, and a new item goes into the selected location.
-export default function Inventory({ items, onAdd, onUpdateQuantity, onRemove }: Props) {
+// shopping list, and a new item goes into the selected location. An item
+// at zero offers to go back on the shopping list.
+export default function Inventory({
+  items,
+  onAdd,
+  onUpdateQuantity,
+  onRemove,
+  onAddToShopping,
+}: Props) {
   const [location, setLocation] = useState<Location>('pantry')
   const [name, setName] = useState('')
   const [quantity, setQuantity] = useState('1')
@@ -142,6 +150,16 @@ export default function Inventory({ items, onAdd, onUpdateQuantity, onRemove }: 
                   >
                     +
                   </button>
+                  {item.quantity <= 0 && (
+                    <button
+                      type="button"
+                      className="qty-button"
+                      aria-label={`Add ${item.nameEn} to shopping list`}
+                      onClick={() => onAddToShopping(item)}
+                    >
+                      Add to list
+                    </button>
+                  )}
                   <button
                     className="remove"
                     onClick={() => onRemove(item)}

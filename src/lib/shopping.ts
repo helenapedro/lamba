@@ -59,3 +59,19 @@ export function groupBySection(
 export function progress(items: ShoppingItem[]): { done: number; total: number } {
   return { done: items.filter((i) => i.checked).length, total: items.length }
 }
+
+/** Names match ignoring case and surrounding spaces. */
+export function normalizeName(name: string): string {
+  return name.trim().toLowerCase()
+}
+
+/** Quantity for a shopping item moving into inventory: "2 lb" -> 2 lb,
+ *  "3" -> 3 un, anything without a leading number -> 1 un. */
+export function parseShoppingQuantity(quantity?: string): {
+  quantity: number
+  unit: string
+} {
+  const match = quantity?.match(/^\s*(\d+(?:\.\d+)?)\s*(.*)$/)
+  if (!match) return { quantity: 1, unit: 'un' }
+  return { quantity: Number(match[1]), unit: match[2].trim() || 'un' }
+}

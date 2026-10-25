@@ -93,12 +93,13 @@ export function useShopping(user: User | null) {
     })
   }
 
-  async function addItem(nameEn: string, section: string) {
+  async function addItem(nameEn: string, section: string, quantity?: string) {
     if (!user || !list || !nameEn.trim()) return
     await addDoc(collection(db, 'users', user.uid, 'shoppingItems'), {
       listId: list.id,
       section,
       nameEn: nameEn.trim(),
+      quantity: quantity?.trim() || undefined,
       checked: false,
       createdAt: serverTimestamp(),
     })

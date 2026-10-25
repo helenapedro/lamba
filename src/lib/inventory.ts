@@ -4,6 +4,8 @@
 // Seeded once, on first login, from her recent purchases; quantities
 // flagged as estimates in the seed notes are for her to correct.
 
+import { normalizeName } from './shopping'
+
 export type Location = 'pantry' | 'fridge' | 'freezer' | 'household'
 
 export interface InventoryItem {
@@ -43,6 +45,43 @@ export function itemsInLocation(
 /** Step for the +/- quantity buttons: half a pound for weighed items. */
 export function quantityStep(unit: string): number {
   return unit === 'lb' ? 0.5 : 1
+}
+
+/** Where a shopping item lands in inventory, by its shopping section. */
+export function locationForSection(section: string): Location {
+  switch (section) {
+    case 'fresh':
+      return 'fridge'
+    case 'freezer':
+      return 'freezer'
+    case 'household':
+      return 'household'
+    default:
+      return 'pantry'
+  }
+}
+
+/** Which shopping section an inventory location restocks into. */
+export function sectionForLocation(location: string): string {
+  switch (location) {
+    case 'fridge':
+      return 'fresh'
+    case 'freezer':
+      return 'freezer'
+    case 'household':
+      return 'household'
+    default:
+      return 'pantry'
+  }
+}
+
+/** The inventory item with the same name (case-insensitive), if any. */
+export function inventoryMatch(
+  items: InventoryItem[],
+  nameEn: string,
+): InventoryItem | undefined {
+  const wanted = normalizeName(nameEn)
+  return items.find((i) => normalizeName(i.nameEn) === wanted)
 }
 
 const SINGULAR_TO_PLURAL: Record<string, string> = {
