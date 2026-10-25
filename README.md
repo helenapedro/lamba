@@ -27,7 +27,10 @@ filter). Shopping and inventory are connected: a Shopping done button
 moves checked items into inventory (adding to the matching item, or
 creating it in the mapped location) and unchecks them, items at zero in
 inventory offer to go back on the shopping list, and the shopping form
-takes quantities.
+takes quantities. A search bar at the top filters recipes, products,
+inventory and the shopping list by name in English or Portuguese, and an
+Export data button downloads the whole dataset as one JSON file for
+reconciliation with the chat records.
 
 ## Assistant sync
 
