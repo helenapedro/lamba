@@ -128,7 +128,18 @@ export default function ShoppingPreview() {
         items={items}
         onToggle={(item) =>
           setItems((prev) =>
-            prev.map((i) => (i.id === item.id ? { ...i, checked: !i.checked } : i)),
+            prev.map((i) =>
+              i.id === item.id
+                ? { ...i, checked: !i.checked, cart: i.checked ? i.cart : false }
+                : i,
+            ),
+          )
+        }
+        onToggleCart={(item) =>
+          setItems((prev) =>
+            prev.map((i) =>
+              i.id === item.id && !i.checked ? { ...i, cart: !i.cart } : i,
+            ),
           )
         }
         onAdd={(nameEn, section, quantity) =>

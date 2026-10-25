@@ -161,6 +161,23 @@ button {
   padding: 8px 10px;
 }
 
+.item.in-cart {
+  background: #f2f5e9;
+}
+
+.cart-button {
+  background: transparent;
+  border: none;
+  font-size: 1.25rem;
+  line-height: 1;
+  padding: 6px;
+  opacity: 0.4;
+}
+
+.cart-button.active {
+  opacity: 1;
+}
+
 .recipe-head .remove {
   background: transparent;
   color: #8a7f6e;

@@ -9,6 +9,8 @@ export interface ShoppingItem {
   store?: string
   notes?: string
   checked: boolean
+  /** Found at the store / in the pickup cart, but not bought yet. */
+  cart?: boolean
   recurringCount?: number
   createdAt?: number
 }
@@ -31,10 +33,12 @@ export function sectionLabel(sectionId: string): string {
   return SECTIONS.find((s) => s.id === sectionId)?.label ?? 'Other'
 }
 
-/** Unchecked items first, then alphabetical by English name. */
+/** Still to find first, then in the cart, then bought, alphabetical inside. */
 export function sortItems(items: ShoppingItem[]): ShoppingItem[] {
+  const rank = (i: ShoppingItem) => (i.checked ? 2 : i.cart ? 1 : 0)
   return [...items].sort((a, b) => {
-    if (a.checked !== b.checked) return a.checked ? 1 : -1
+    const r = rank(a) - rank(b)
+    if (r !== 0) return r
     return a.nameEn.localeCompare(b.nameEn)
   })
 }
@@ -58,6 +62,11 @@ export function groupBySection(
 
 export function progress(items: ShoppingItem[]): { done: number; total: number } {
   return { done: items.filter((i) => i.checked).length, total: items.length }
+}
+
+/** Items marked as found / in the pickup cart, not yet bought. */
+export function cartCount(items: ShoppingItem[]): number {
+  return items.filter((i) => i.cart && !i.checked).length
 }
 
 /** Names match ignoring case and surrounding spaces. */

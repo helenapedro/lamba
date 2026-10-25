@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import {
   SECTIONS,
+  cartCount,
   groupBySection,
   progress,
   type ShoppingItem,
@@ -11,6 +12,7 @@ interface Props {
   title: string
   items: ShoppingItem[]
   onToggle: (item: ShoppingItem) => void
+  onToggleCart: (item: ShoppingItem) => void
   onAdd: (nameEn: string, section: string, quantity?: string) => void
   onRemove: (item: ShoppingItem) => void
   onShoppingDone: () => void
@@ -23,6 +25,7 @@ export default function ShoppingList({
   title,
   items,
   onToggle,
+  onToggleCart,
   onAdd,
   onRemove,
   onShoppingDone,
@@ -39,6 +42,7 @@ export default function ShoppingList({
     items.filter((i) => matchesQuery(query, [i.nameEn, i.namePt, i.brand])),
   )
   const { done, total } = progress(items)
+  const inCart = cartCount(items)
   const activeGroup = groups.find((g) => g.section.id === section)
 
   function submit(e: React.FormEvent) {
@@ -53,7 +57,7 @@ export default function ShoppingList({
     <section className="shopping">
       <h2>Shopping list: {title}</h2>
       <p className="progress">
-        {done} of {total} done
+        {done} of {total} done{inCart > 0 ? ` · ${inCart} in cart` : ''}
       </p>
       {done > 0 && (
         <div className="button-row">
@@ -109,7 +113,12 @@ export default function ShoppingList({
           <h3>{activeGroup.section.label}</h3>
           <ul className="items">
             {activeGroup.items.map((item) => (
-              <li key={item.id} className={item.checked ? 'item checked' : 'item'}>
+              <li
+                key={item.id}
+                className={
+                  item.checked ? 'item checked' : item.cart ? 'item in-cart' : 'item'
+                }
+              >
                 <label>
                   <input
                     type="checkbox"
@@ -118,9 +127,14 @@ export default function ShoppingList({
                   />
                   <span className="item-main">
                     <span className="item-name">{item.nameEn}</span>
-                    {(item.brand || item.quantity || item.namePt) && (
+                    {(item.cart || item.brand || item.quantity || item.namePt) && (
                       <span className="item-sub">
-                        {[item.brand, item.quantity, item.namePt]
+                        {[
+                          item.cart ? 'In cart' : null,
+                          item.brand,
+                          item.quantity,
+                          item.namePt,
+                        ]
                           .filter(Boolean)
                           .join(' · ')}
                       </span>
@@ -128,6 +142,20 @@ export default function ShoppingList({
                     {item.notes && <span className="item-note">{item.notes}</span>}
                   </span>
                 </label>
+                {!item.checked && (
+                  <button
+                    type="button"
+                    className={item.cart ? 'cart-button active' : 'cart-button'}
+                    onClick={() => onToggleCart(item)}
+                    aria-label={
+                      item.cart
+                        ? `Remove ${item.nameEn} from cart`
+                        : `Mark ${item.nameEn} as in cart`
+                    }
+                  >
+                    🛒
+                  </button>
+                )}
                 <button
                   className="remove"
                   onClick={() => onRemove(item)}

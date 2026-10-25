@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import {
   SECTIONS,
+  cartCount,
   groupBySection,
   normalizeName,
   parseShoppingQuantity,
@@ -28,6 +29,33 @@ describe('sortItems', () => {
       item({ nameEn: 'Apples' }),
     ])
     expect(sorted.map((i) => i.nameEn)).toEqual(['Apples', 'Milk', 'Zucchini'])
+  })
+
+  it('orders still to find, then in cart, then bought', () => {
+    const sorted = sortItems([
+      item({ nameEn: 'Zucchini', checked: true }),
+      item({ nameEn: 'Milk', cart: true }),
+      item({ nameEn: 'Apples' }),
+      item({ nameEn: 'Bananas', cart: true }),
+    ])
+    expect(sorted.map((i) => i.nameEn)).toEqual([
+      'Apples',
+      'Bananas',
+      'Milk',
+      'Zucchini',
+    ])
+  })
+})
+
+describe('cartCount', () => {
+  it('counts unchecked cart items only', () => {
+    expect(
+      cartCount([
+        item({ cart: true }),
+        item({ cart: true, checked: true }),
+        item({}),
+      ]),
+    ).toBe(1)
   })
 })
 

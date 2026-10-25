@@ -90,6 +90,15 @@ export function useShopping(user: User | null) {
     if (!user) return
     await updateDoc(doc(db, 'users', user.uid, 'shoppingItems', item.id), {
       checked: !item.checked,
+      // Buying clears the cart mark: it is no longer "to pick up".
+      ...(item.checked ? {} : { cart: false }),
+    })
+  }
+
+  async function toggleCart(item: ShoppingItem) {
+    if (!user || item.checked) return
+    await updateDoc(doc(db, 'users', user.uid, 'shoppingItems', item.id), {
+      cart: !item.cart,
     })
   }
 
@@ -110,5 +119,5 @@ export function useShopping(user: User | null) {
     await deleteDoc(doc(db, 'users', user.uid, 'shoppingItems', item.id))
   }
 
-  return { list, items, loading, toggleItem, addItem, removeItem }
+  return { list, items, loading, toggleItem, toggleCart, addItem, removeItem }
 }

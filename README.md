@@ -31,7 +31,11 @@ takes quantities. A search bar at the top filters recipes, products,
 inventory and the shopping list by name in English or Portuguese, and an
 Export data button downloads the whole dataset as one JSON file for
 reconciliation with the chat records. An Uncheck all button clears the
-shopping checks without moving anything into inventory.
+shopping checks without moving anything into inventory. Items can also
+be marked as in cart (found at the store or in the pickup cart, not yet
+bought): they sort between still to find and bought, show an In cart
+note and a progress count, are skipped by Shopping done, and lose the
+mark when checked as bought.
 
 ## Assistant sync
 

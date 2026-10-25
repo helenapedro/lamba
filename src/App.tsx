@@ -101,7 +101,7 @@ export default function App() {
         <button onClick={() => signInWithPopup(auth, googleProvider)}>
           Sign in with Google
         </button>
-        <p className="version">Lamba v1.3.1</p>
+        <p className="version">Lamba v1.4.0</p>
       </main>
     )
   }
@@ -143,6 +143,7 @@ export default function App() {
           title={shopping.list.title}
           items={shopping.items}
           onToggle={shopping.toggleItem}
+          onToggleCart={shopping.toggleCart}
           onAdd={shopping.addItem}
           onRemove={shopping.removeItem}
           onShoppingDone={handleShoppingDone}
@@ -210,7 +211,7 @@ export default function App() {
         )}
         <button onClick={() => signOut(auth)}>Sign out</button>
       </div>
-      <p className="version">Lamba v1.3.1</p>
+      <p className="version">Lamba v1.4.0</p>
     </main>
   )
 }
