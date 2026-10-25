@@ -44,7 +44,7 @@ export default function App() {
         <button onClick={() => signInWithPopup(auth, googleProvider)}>
           Sign in with Google
         </button>
-        <p className="version">Lamba v1.1.1</p>
+        <p className="version">Lamba v1.1.2</p>
       </main>
     )
   }
@@ -54,7 +54,10 @@ export default function App() {
       <h1>Lamba</h1>
       <p>Hello, {user.displayName ?? user.email}.</p>
 
-      <RecipeOfDay recipes={recipesState.recipes} />
+      <RecipeOfDay
+        recipes={recipesState.recipes}
+        onToggleFavorite={recipesState.updateFavorite}
+      />
 
       {shopping.loading || !shopping.list ? (
         <div className="card">
@@ -114,7 +117,7 @@ export default function App() {
       )}
 
       <button onClick={() => signOut(auth)}>Sign out</button>
-      <p className="version">Lamba v1.1.1</p>
+      <p className="version">Lamba v1.1.2</p>
     </main>
   )
 }

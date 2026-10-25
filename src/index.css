@@ -72,7 +72,6 @@ button {
   flex-wrap: wrap;
   gap: 6px;
   flex: 1 1 100%;
-  order: 3;
 }
 
 .chip {
@@ -155,6 +154,14 @@ button {
 }
 
 .item .remove {
+  background: transparent;
+  color: #8a7f6e;
+  border: none;
+  font-size: 1.3rem;
+  padding: 8px 10px;
+}
+
+.recipe-head .remove {
   background: transparent;
   color: #8a7f6e;
   border: none;

@@ -91,7 +91,14 @@ export default function ShoppingPreview() {
   return (
     <main>
       <h1>Preview (dev)</h1>
-      <RecipeOfDay recipes={recipes} />
+      <RecipeOfDay
+        recipes={recipes}
+        onToggleFavorite={(recipe, favorite) =>
+          setRecipes((prev) =>
+            prev.map((r) => (r.id === recipe.id ? { ...r, favorite } : r)),
+          )
+        }
+      />
       <ShoppingList
         title="Preview list"
         items={items}
