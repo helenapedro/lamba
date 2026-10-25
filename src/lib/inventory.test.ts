@@ -51,4 +51,18 @@ describe('formatQuantity', () => {
     expect(formatQuantity(2, 'bottles')).toBe('2 bottles')
     expect(formatQuantity(3.5, 'lb')).toBe('3.5 lb')
   })
+  it('pluralizes singular units above one, singularizes at one', () => {
+    expect(formatQuantity(2, 'bottle')).toBe('2 bottles')
+    expect(formatQuantity(1, 'bottles')).toBe('1 bottle')
+    expect(formatQuantity(2, 'bag')).toBe('2 bags')
+    expect(formatQuantity(1, 'bag')).toBe('1 bag')
+    expect(formatQuantity(3, 'box')).toBe('3 boxes')
+    expect(formatQuantity(1, 'boxes')).toBe('1 box')
+    expect(formatQuantity(0, 'pack')).toBe('0 packs')
+  })
+  it('leaves invariant units alone', () => {
+    expect(formatQuantity(2, 'un')).toBe('2 un')
+    expect(formatQuantity(1, 'lb')).toBe('1 lb')
+    expect(formatQuantity(1.5, 'lb')).toBe('1.5 lb')
+  })
 })

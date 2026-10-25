@@ -189,6 +189,13 @@ button {
   color: #b8860b;
 }
 
+.field-label {
+  display: grid;
+  gap: 4px;
+  font-size: 0.85rem;
+  color: #6b6257;
+}
+
 .version {
   color: #a3988a;
   font-size: 0.75rem;

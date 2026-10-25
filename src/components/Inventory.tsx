@@ -77,12 +77,15 @@ export default function Inventory({ items, onAdd, onUpdateQuantity, onRemove }: 
           value={unit}
           onChange={(e) => setUnit(e.target.value)}
         />
-        <input
-          aria-label="Expiry date (optional)"
-          type="date"
-          value={expiresAt}
-          onChange={(e) => setExpiresAt(e.target.value)}
-        />
+        <label className="field-label">
+          <span>Expiry date (optional)</span>
+          <input
+            aria-label="Expiry date (optional)"
+            type="date"
+            value={expiresAt}
+            onChange={(e) => setExpiresAt(e.target.value)}
+          />
+        </label>
         <div className="section-chips" role="radiogroup" aria-label="Location">
           {LOCATIONS.map((l) => (
             <button
