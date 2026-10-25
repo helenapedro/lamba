@@ -14,6 +14,7 @@ interface Props {
   onAdd: (nameEn: string, section: string, quantity?: string) => void
   onRemove: (item: ShoppingItem) => void
   onShoppingDone: () => void
+  onResetChecks: () => void
   canMove: boolean
   query?: string
 }
@@ -25,6 +26,7 @@ export default function ShoppingList({
   onAdd,
   onRemove,
   onShoppingDone,
+  onResetChecks,
   canMove,
   query = '',
 }: Props) {
@@ -53,10 +55,17 @@ export default function ShoppingList({
       <p className="progress">
         {done} of {total} done
       </p>
-      {done > 0 && canMove && (
-        <button type="button" onClick={onShoppingDone}>
-          Shopping done
-        </button>
+      {done > 0 && (
+        <div className="button-row">
+          {canMove && (
+            <button type="button" onClick={onShoppingDone}>
+              Shopping done
+            </button>
+          )}
+          <button type="button" onClick={onResetChecks}>
+            Uncheck all
+          </button>
+        </div>
       )}
 
       <form className="add-form" onSubmit={submit}>

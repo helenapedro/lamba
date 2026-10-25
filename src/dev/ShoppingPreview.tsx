@@ -175,6 +175,9 @@ export default function ShoppingPreview() {
           setItems((prev) => prev.map((i) => (i.checked ? { ...i, checked: false } : i)))
         }}
         canMove
+        onResetChecks={() =>
+          setItems((prev) => prev.map((i) => (i.checked ? { ...i, checked: false } : i)))
+        }
         query={query}
       />
       <Recipes
@@ -239,13 +242,19 @@ export default function ShoppingPreview() {
         }
         query={query}
       />
-      <ExportButton
-        shoppingTitle="Preview list"
-        shoppingItems={items}
-        recipes={recipes}
-        products={products}
-        inventory={inventory}
-      />
+      <div className="button-row">
+        <ExportButton
+          shoppingTitle="Preview list"
+          shoppingItems={items}
+          recipes={recipes}
+          products={products}
+          inventory={inventory}
+        />
+        {/* Layout mirror of the App footer; disabled in preview. */}
+        <button type="button" disabled>
+          Sign out
+        </button>
+      </div>
     </main>
   )
 }

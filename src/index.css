@@ -205,6 +205,12 @@ button {
   flex: 1;
 }
 
+.button-row {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
 .version {
   color: #a3988a;
   font-size: 0.75rem;

@@ -30,7 +30,8 @@ inventory offer to go back on the shopping list, and the shopping form
 takes quantities. A search bar at the top filters recipes, products,
 inventory and the shopping list by name in English or Portuguese, and an
 Export data button downloads the whole dataset as one JSON file for
-reconciliation with the chat records.
+reconciliation with the chat records. An Uncheck all button clears the
+shopping checks without moving anything into inventory.
 
 ## Assistant sync
 

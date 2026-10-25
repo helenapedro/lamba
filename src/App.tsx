@@ -76,6 +76,14 @@ export default function App() {
     await shopping.addItem(item.nameEn, sectionForLocation(item.location))
   }
 
+  // Uncheck everything without touching inventory: for checks that marked
+  // what she already has, not a trip to move.
+  async function handleResetChecks() {
+    for (const item of shopping.items.filter((i) => i.checked)) {
+      await shopping.toggleItem(item)
+    }
+  }
+
   if (authLoading) {
     return (
       <main>
@@ -93,7 +101,7 @@ export default function App() {
         <button onClick={() => signInWithPopup(auth, googleProvider)}>
           Sign in with Google
         </button>
-        <p className="version">Lamba v1.3.0</p>
+        <p className="version">Lamba v1.3.1</p>
       </main>
     )
   }
@@ -138,6 +146,7 @@ export default function App() {
           onAdd={shopping.addItem}
           onRemove={shopping.removeItem}
           onShoppingDone={handleShoppingDone}
+          onResetChecks={handleResetChecks}
           canMove={!inventoryState.loading}
           query={query}
         />
@@ -189,17 +198,19 @@ export default function App() {
         />
       )}
 
-      {shopping.list && (
-        <ExportButton
-          shoppingTitle={shopping.list.title}
-          shoppingItems={shopping.items}
-          recipes={recipesState.recipes}
-          products={productsState.products}
-          inventory={inventoryState.items}
-        />
-      )}
-      <button onClick={() => signOut(auth)}>Sign out</button>
-      <p className="version">Lamba v1.3.0</p>
+      <div className="button-row">
+        {shopping.list && (
+          <ExportButton
+            shoppingTitle={shopping.list.title}
+            shoppingItems={shopping.items}
+            recipes={recipesState.recipes}
+            products={productsState.products}
+            inventory={inventoryState.items}
+          />
+        )}
+        <button onClick={() => signOut(auth)}>Sign out</button>
+      </div>
+      <p className="version">Lamba v1.3.1</p>
     </main>
   )
 }
