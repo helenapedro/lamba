@@ -18,9 +18,11 @@ Access is restricted to the owner account through Firestore security rules.
 
 Implemented so far: Google sign-in, a Firestore shopping list with a
 category filter (now including a Household category for non-food items),
-saved recipes with a recipe of the day that syncs daily, and a product
+saved recipes with a recipe of the day that syncs daily, a product
 registry with the brand bought for each product and a keep / moderation /
-substitute verdict. Home inventory is still to come.
+substitute verdict, and a home inventory by location (pantry, fridge,
+freezer, household) with adjustable quantities, seeded from recent
+purchases.
 
 ## Assistant sync
 

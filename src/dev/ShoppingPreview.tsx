@@ -3,9 +3,11 @@ import ShoppingList from '../components/ShoppingList'
 import RecipeOfDay from '../components/RecipeOfDay'
 import Recipes from '../components/Recipes'
 import Products from '../components/Products'
+import Inventory from '../components/Inventory'
 import type { ShoppingItem } from '../lib/shopping'
 import { todayStr, type Recipe } from '../lib/recipes'
 import type { Product } from '../lib/products'
+import type { InventoryItem } from '../lib/inventory'
 
 // Dev-only preview with in-memory state, so the UI can be clicked through
 // in a browser without Firebase auth. Reachable only in `npm run dev` at
@@ -52,6 +54,13 @@ const INITIAL_RECIPES: Recipe[] = [
 let nextItemId = 4
 let nextRecipeId = 4
 let nextProductId = 4
+let nextInventoryId = 4
+
+const INITIAL_INVENTORY: InventoryItem[] = [
+  { id: 'i1', nameEn: 'Olive Oil', quantity: 2, unit: 'bottles', location: 'pantry' },
+  { id: 'i2', nameEn: 'Butter', quantity: 2, unit: 'blocks', location: 'fridge' },
+  { id: 'i3', nameEn: 'Tilapia Fillets', quantity: 1, unit: 'lb', location: 'freezer' },
+]
 
 const INITIAL_PRODUCTS: Product[] = [
   {
@@ -77,6 +86,7 @@ export default function ShoppingPreview() {
   const [items, setItems] = useState<ShoppingItem[]>(INITIAL_ITEMS)
   const [recipes, setRecipes] = useState<Recipe[]>(INITIAL_RECIPES)
   const [products, setProducts] = useState<Product[]>(INITIAL_PRODUCTS)
+  const [inventory, setInventory] = useState<InventoryItem[]>(INITIAL_INVENTORY)
 
   return (
     <main>
@@ -122,6 +132,20 @@ export default function ShoppingPreview() {
           )
         }
         onRemove={(product) => setProducts((prev) => prev.filter((p) => p.id !== product.id))}
+      />
+      <Inventory
+        items={inventory}
+        onAdd={(item) =>
+          setInventory((prev) => [...prev, { ...item, id: `i${nextInventoryId++}` }])
+        }
+        onUpdateQuantity={(item, quantity) =>
+          setInventory((prev) =>
+            prev.map((i) =>
+              i.id === item.id ? { ...i, quantity: Math.max(0, quantity) } : i,
+            ),
+          )
+        }
+        onRemove={(item) => setInventory((prev) => prev.filter((i) => i.id !== item.id))}
       />
     </main>
   )

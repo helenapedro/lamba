@@ -4,10 +4,12 @@ import { auth, googleProvider } from './firebase'
 import { useShopping } from './hooks/useShopping'
 import { useRecipes } from './hooks/useRecipes'
 import { useProducts } from './hooks/useProducts'
+import { useInventory } from './hooks/useInventory'
 import ShoppingList from './components/ShoppingList'
 import RecipeOfDay from './components/RecipeOfDay'
 import Recipes from './components/Recipes'
 import Products from './components/Products'
+import Inventory from './components/Inventory'
 
 export default function App() {
   const [user, setUser] = useState<User | null>(null)
@@ -15,6 +17,7 @@ export default function App() {
   const shopping = useShopping(user)
   const recipesState = useRecipes(user)
   const productsState = useProducts(user)
+  const inventoryState = useInventory(user)
 
   useEffect(() => {
     const unsub = onAuthStateChanged(auth, (u) => {
@@ -41,7 +44,7 @@ export default function App() {
         <button onClick={() => signInWithPopup(auth, googleProvider)}>
           Sign in with Google
         </button>
-        <p className="version">Lamba v0.9.0</p>
+        <p className="version">Lamba v1.0.0</p>
       </main>
     )
   }
@@ -95,8 +98,22 @@ export default function App() {
         />
       )}
 
+      {inventoryState.loading ? (
+        <div className="card">
+          <h2>At home</h2>
+          <p>Loading your inventory...</p>
+        </div>
+      ) : (
+        <Inventory
+          items={inventoryState.items}
+          onAdd={inventoryState.addItem}
+          onUpdateQuantity={inventoryState.updateQuantity}
+          onRemove={inventoryState.removeItem}
+        />
+      )}
+
       <button onClick={() => signOut(auth)}>Sign out</button>
-      <p className="version">Lamba v0.9.0</p>
+      <p className="version">Lamba v1.0.0</p>
     </main>
   )
 }

@@ -162,6 +162,14 @@ button {
   padding: 8px 10px;
 }
 
+.recipe-head .qty-button {
+  background: transparent;
+  color: #1a1a1a;
+  border: 1px solid #e5ded2;
+  font-size: 1.1rem;
+  padding: 4px 12px;
+}
+
 .version {
   color: #a3988a;
   font-size: 0.75rem;
