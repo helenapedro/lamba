@@ -120,6 +120,11 @@ export default function ShoppingPreview() {
           setRecipes((prev) => [...prev, { ...recipe, id: `r${nextRecipeId++}` }])
         }
         onRemove={(recipe) => setRecipes((prev) => prev.filter((r) => r.id !== recipe.id))}
+        onToggleFavorite={(recipe, favorite) =>
+          setRecipes((prev) =>
+            prev.map((r) => (r.id === recipe.id ? { ...r, favorite } : r)),
+          )
+        }
       />
       <Products
         products={products}

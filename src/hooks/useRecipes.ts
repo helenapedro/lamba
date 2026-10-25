@@ -6,6 +6,7 @@ import {
   doc,
   onSnapshot,
   serverTimestamp,
+  updateDoc,
   writeBatch,
 } from 'firebase/firestore'
 import type { User } from 'firebase/auth'
@@ -69,5 +70,12 @@ export function useRecipes(user: User | null) {
     await deleteDoc(doc(db, 'users', user.uid, 'recipes', recipe.id))
   }
 
-  return { recipes, loading, addRecipe, removeRecipe }
+  async function updateFavorite(recipe: Recipe, favorite: boolean) {
+    if (!user) return
+    await updateDoc(doc(db, 'users', user.uid, 'recipes', recipe.id), {
+      favorite,
+    })
+  }
+
+  return { recipes, loading, addRecipe, removeRecipe, updateFavorite }
 }

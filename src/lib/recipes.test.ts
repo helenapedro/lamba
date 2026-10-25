@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import {
+  favoriteRecipes,
   latestDaily,
   recipeOn,
   recipesInSlot,
@@ -74,5 +75,20 @@ describe('sortRecipes', () => {
       'Old',
       'Standing',
     ])
+  })
+})
+
+describe('favoriteRecipes', () => {
+  it('returns only favorites, newest first', () => {
+    const mixed = [
+      recipe({ title: 'Fav old', date: '2026-10-14', favorite: true }),
+      recipe({ title: 'Plain', date: '2026-10-22' }),
+      recipe({ title: 'Fav new', date: '2026-10-20', favorite: true }),
+    ]
+    expect(favoriteRecipes(mixed).map((r) => r.title)).toEqual([
+      'Fav new',
+      'Fav old',
+    ])
+    expect(favoriteRecipes(recipes)).toEqual([])
   })
 })

@@ -17,6 +17,7 @@ export interface Recipe {
   substitutions?: string
   sourceUrl?: string
   date?: string
+  favorite?: boolean
 }
 
 export type NewRecipe = Omit<Recipe, 'id'>
@@ -66,6 +67,11 @@ export function sortRecipes(recipes: Recipe[]): Recipe[] {
 /** Recipes of one meal slot, newest first. The slot filter in the UI. */
 export function recipesInSlot(recipes: Recipe[], slot: string): Recipe[] {
   return sortRecipes(recipes).filter((r) => r.mealSlot === slot)
+}
+
+/** Favorite recipes only, newest first. The favorites filter in the UI. */
+export function favoriteRecipes(recipes: Recipe[]): Recipe[] {
+  return sortRecipes(recipes).filter((r) => r.favorite)
 }
 
 /** Human label for a recipe date, e.g. "Oct 22". */

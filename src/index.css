@@ -170,6 +170,18 @@ button {
   padding: 4px 12px;
 }
 
+.recipe-head .favorite-button {
+  background: transparent;
+  color: #8a7f6e;
+  border: none;
+  font-size: 1.4rem;
+  padding: 4px 8px;
+}
+
+.recipe-head .favorite-button.active {
+  color: #b8860b;
+}
+
 .version {
   color: #a3988a;
   font-size: 0.75rem;

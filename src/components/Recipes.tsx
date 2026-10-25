@@ -2,6 +2,7 @@ import { useState, type FormEvent } from 'react'
 import {
   MEAL_SLOTS,
   dateLabel,
+  favoriteRecipes,
   recipesInSlot,
   slotLabel,
   type NewRecipe,
@@ -12,11 +13,13 @@ interface Props {
   recipes: Recipe[]
   onAdd: (recipe: NewRecipe) => void
   onRemove: (recipe: Recipe) => void
+  onToggleFavorite: (recipe: Recipe, favorite: boolean) => void
 }
 
-export default function Recipes({ recipes, onAdd, onRemove }: Props) {
+export default function Recipes({ recipes, onAdd, onRemove, onToggleFavorite }: Props) {
   const [title, setTitle] = useState('')
   const [slot, setSlot] = useState('dinner')
+  const [favoritesOnly, setFavoritesOnly] = useState(false)
   const [pairing, setPairing] = useState('')
   const [ingredients, setIngredients] = useState('')
   const [steps, setSteps] = useState('')
@@ -42,11 +45,24 @@ export default function Recipes({ recipes, onAdd, onRemove }: Props) {
     setSteps('')
   }
 
-  const visible = recipesInSlot(recipes, slot)
+  const visible = favoritesOnly
+    ? favoriteRecipes(recipes)
+    : recipesInSlot(recipes, slot)
 
   return (
     <section className="card">
       <h2>Recipes</h2>
+
+      <div className="section-chips">
+        <button
+          type="button"
+          aria-pressed={favoritesOnly}
+          className={favoritesOnly ? 'chip active' : 'chip'}
+          onClick={() => setFavoritesOnly(!favoritesOnly)}
+        >
+          ★ Favorites
+        </button>
+      </div>
 
       <form className="recipe-form" onSubmit={handleSubmit}>
         <input
@@ -93,7 +109,11 @@ export default function Recipes({ recipes, onAdd, onRemove }: Props) {
       </form>
 
       {visible.length === 0 ? (
-        <p className="empty-section">No recipes in this category yet.</p>
+        <p className="empty-section">
+          {favoritesOnly
+            ? 'No favorite recipes yet.'
+            : 'No recipes in this category yet.'}
+        </p>
       ) : (
         <ul className="items">
           {visible.map((recipe) => {
@@ -112,6 +132,15 @@ export default function Recipes({ recipes, onAdd, onRemove }: Props) {
                     {slotLabel(recipe.mealSlot)}
                     {recipe.date ? ` · ${dateLabel(recipe.date)}` : ''}
                   </span>
+                </button>
+                <button
+                  type="button"
+                  className={recipe.favorite ? 'favorite-button active' : 'favorite-button'}
+                  aria-label={`Toggle favorite for ${recipe.title}`}
+                  aria-pressed={!!recipe.favorite}
+                  onClick={() => onToggleFavorite(recipe, !recipe.favorite)}
+                >
+                  {recipe.favorite ? '★' : '☆'}
                 </button>
                 <button
                   className="remove"
