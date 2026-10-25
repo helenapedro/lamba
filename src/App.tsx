@@ -17,10 +17,12 @@ import RecipeOfDay from './components/RecipeOfDay'
 import Recipes from './components/Recipes'
 import Products from './components/Products'
 import Inventory from './components/Inventory'
+import ExportButton from './components/ExportButton'
 
 export default function App() {
   const [user, setUser] = useState<User | null>(null)
   const [authLoading, setAuthLoading] = useState(true)
+  const [query, setQuery] = useState('')
   const shopping = useShopping(user)
   const recipesState = useRecipes(user)
   const productsState = useProducts(user)
@@ -91,7 +93,7 @@ export default function App() {
         <button onClick={() => signInWithPopup(auth, googleProvider)}>
           Sign in with Google
         </button>
-        <p className="version">Lamba v1.2.0</p>
+        <p className="version">Lamba v1.3.0</p>
       </main>
     )
   }
@@ -101,10 +103,27 @@ export default function App() {
       <h1>Lamba</h1>
       <p>Hello, {user.displayName ?? user.email}.</p>
 
-      <RecipeOfDay
-        recipes={recipesState.recipes}
-        onToggleFavorite={recipesState.updateFavorite}
-      />
+      <div className="search-bar">
+        <input
+          type="search"
+          aria-label="Search everything"
+          placeholder="Search recipes, products, inventory, shopping"
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+        />
+        {query && (
+          <button type="button" onClick={() => setQuery('')}>
+            Clear search
+          </button>
+        )}
+      </div>
+
+      {!query.trim() && (
+        <RecipeOfDay
+          recipes={recipesState.recipes}
+          onToggleFavorite={recipesState.updateFavorite}
+        />
+      )}
 
       {shopping.loading || !shopping.list ? (
         <div className="card">
@@ -120,6 +139,7 @@ export default function App() {
           onRemove={shopping.removeItem}
           onShoppingDone={handleShoppingDone}
           canMove={!inventoryState.loading}
+          query={query}
         />
       )}
 
@@ -134,6 +154,7 @@ export default function App() {
           onAdd={recipesState.addRecipe}
           onRemove={recipesState.removeRecipe}
           onToggleFavorite={recipesState.updateFavorite}
+          query={query}
         />
       )}
 
@@ -148,6 +169,7 @@ export default function App() {
           onAdd={productsState.addProduct}
           onUpdateBrand={productsState.updateBrand}
           onRemove={productsState.removeProduct}
+          query={query}
         />
       )}
 
@@ -163,11 +185,21 @@ export default function App() {
           onUpdateQuantity={inventoryState.updateQuantity}
           onRemove={inventoryState.removeItem}
           onAddToShopping={handleAddToShopping}
+          query={query}
         />
       )}
 
+      {shopping.list && (
+        <ExportButton
+          shoppingTitle={shopping.list.title}
+          shoppingItems={shopping.items}
+          recipes={recipesState.recipes}
+          products={productsState.products}
+          inventory={inventoryState.items}
+        />
+      )}
       <button onClick={() => signOut(auth)}>Sign out</button>
-      <p className="version">Lamba v1.2.0</p>
+      <p className="version">Lamba v1.3.0</p>
     </main>
   )
 }

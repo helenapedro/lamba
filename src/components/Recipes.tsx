@@ -8,15 +8,23 @@ import {
   type NewRecipe,
   type Recipe,
 } from '../lib/recipes'
+import { matchesQuery } from '../lib/search'
 
 interface Props {
   recipes: Recipe[]
   onAdd: (recipe: NewRecipe) => void
   onRemove: (recipe: Recipe) => void
   onToggleFavorite: (recipe: Recipe, favorite: boolean) => void
+  query?: string
 }
 
-export default function Recipes({ recipes, onAdd, onRemove, onToggleFavorite }: Props) {
+export default function Recipes({
+  recipes,
+  onAdd,
+  onRemove,
+  onToggleFavorite,
+  query = '',
+}: Props) {
   const [title, setTitle] = useState('')
   const [slot, setSlot] = useState('dinner')
   const [favoritesOnly, setFavoritesOnly] = useState(false)
@@ -45,9 +53,10 @@ export default function Recipes({ recipes, onAdd, onRemove, onToggleFavorite }: 
     setSteps('')
   }
 
-  const visible = favoritesOnly
+  const visible = (favoritesOnly
     ? favoriteRecipes(recipes)
     : recipesInSlot(recipes, slot)
+  ).filter((r) => matchesQuery(query, [r.title, r.pairing, ...r.ingredients]))
 
   return (
     <section className="card">
@@ -110,9 +119,11 @@ export default function Recipes({ recipes, onAdd, onRemove, onToggleFavorite }: 
 
       {visible.length === 0 ? (
         <p className="empty-section">
-          {favoritesOnly
-            ? 'No favorite recipes yet.'
-            : 'No recipes in this category yet.'}
+          {query.trim()
+            ? 'No recipes match your search.'
+            : favoritesOnly
+              ? 'No favorite recipes yet.'
+              : 'No recipes in this category yet.'}
         </p>
       ) : (
         <ul className="items">

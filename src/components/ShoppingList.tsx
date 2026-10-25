@@ -5,6 +5,7 @@ import {
   progress,
   type ShoppingItem,
 } from '../lib/shopping'
+import { matchesQuery } from '../lib/search'
 
 interface Props {
   title: string
@@ -14,6 +15,7 @@ interface Props {
   onRemove: (item: ShoppingItem) => void
   onShoppingDone: () => void
   canMove: boolean
+  query?: string
 }
 
 export default function ShoppingList({
@@ -24,13 +26,16 @@ export default function ShoppingList({
   onRemove,
   onShoppingDone,
   canMove,
+  query = '',
 }: Props) {
   const [name, setName] = useState('')
   const [quantity, setQuantity] = useState('')
   // The selected chip is the active category: it filters which items are
   // shown and is where a newly added item goes.
   const [section, setSection] = useState('fresh')
-  const groups = groupBySection(items)
+  const groups = groupBySection(
+    items.filter((i) => matchesQuery(query, [i.nameEn, i.namePt, i.brand])),
+  )
   const { done, total } = progress(items)
   const activeGroup = groups.find((g) => g.section.id === section)
 
@@ -86,7 +91,9 @@ export default function ShoppingList({
 
       {!activeGroup ? (
         <p className="empty-section">
-          No items in this category yet. Add one above.
+          {query.trim()
+            ? 'No items match your search.'
+            : 'No items in this category yet. Add one above.'}
         </p>
       ) : (
         <div className="section-block">

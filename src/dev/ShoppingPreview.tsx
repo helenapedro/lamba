@@ -4,6 +4,7 @@ import RecipeOfDay from '../components/RecipeOfDay'
 import Recipes from '../components/Recipes'
 import Products from '../components/Products'
 import Inventory from '../components/Inventory'
+import ExportButton from '../components/ExportButton'
 import type { ShoppingItem } from '../lib/shopping'
 import {
   normalizeName,
@@ -93,18 +94,35 @@ export default function ShoppingPreview() {
   const [recipes, setRecipes] = useState<Recipe[]>(INITIAL_RECIPES)
   const [products, setProducts] = useState<Product[]>(INITIAL_PRODUCTS)
   const [inventory, setInventory] = useState<InventoryItem[]>(INITIAL_INVENTORY)
+  const [query, setQuery] = useState('')
 
   return (
     <main>
       <h1>Preview (dev)</h1>
-      <RecipeOfDay
-        recipes={recipes}
-        onToggleFavorite={(recipe, favorite) =>
-          setRecipes((prev) =>
-            prev.map((r) => (r.id === recipe.id ? { ...r, favorite } : r)),
-          )
-        }
-      />
+      <div className="search-bar">
+        <input
+          type="search"
+          aria-label="Search everything"
+          placeholder="Search recipes, products, inventory, shopping"
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+        />
+        {query && (
+          <button type="button" onClick={() => setQuery('')}>
+            Clear search
+          </button>
+        )}
+      </div>
+      {!query.trim() && (
+        <RecipeOfDay
+          recipes={recipes}
+          onToggleFavorite={(recipe, favorite) =>
+            setRecipes((prev) =>
+              prev.map((r) => (r.id === recipe.id ? { ...r, favorite } : r)),
+            )
+          }
+        />
+      )}
       <ShoppingList
         title="Preview list"
         items={items}
@@ -157,6 +175,7 @@ export default function ShoppingPreview() {
           setItems((prev) => prev.map((i) => (i.checked ? { ...i, checked: false } : i)))
         }}
         canMove
+        query={query}
       />
       <Recipes
         recipes={recipes}
@@ -169,6 +188,7 @@ export default function ShoppingPreview() {
             prev.map((r) => (r.id === recipe.id ? { ...r, favorite } : r)),
           )
         }
+        query={query}
       />
       <Products
         products={products}
@@ -181,6 +201,7 @@ export default function ShoppingPreview() {
           )
         }
         onRemove={(product) => setProducts((prev) => prev.filter((p) => p.id !== product.id))}
+        query={query}
       />
       <Inventory
         items={inventory}
@@ -216,6 +237,14 @@ export default function ShoppingPreview() {
             ]
           })
         }
+        query={query}
+      />
+      <ExportButton
+        shoppingTitle="Preview list"
+        shoppingItems={items}
+        recipes={recipes}
+        products={products}
+        inventory={inventory}
       />
     </main>
   )

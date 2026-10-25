@@ -196,6 +196,15 @@ button {
   color: #6b6257;
 }
 
+.search-bar {
+  display: flex;
+  gap: 8px;
+}
+
+.search-bar input {
+  flex: 1;
+}
+
 .version {
   color: #a3988a;
   font-size: 0.75rem;

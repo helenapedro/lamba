@@ -8,19 +8,27 @@ import {
   type Product,
   type Verdict,
 } from '../lib/products'
+import { matchesQuery } from '../lib/search'
 
 interface Props {
   products: Product[]
   onAdd: (product: NewProduct) => void
   onUpdateBrand: (product: Product, brand: string) => void
   onRemove: (product: Product) => void
+  query?: string
 }
 
 // The product registry: which brand Helena buys for each product, and the
 // verdict from her analyses. No photos, by her decision. The category
 // chips filter the list, like the shopping list, and a new product goes
 // into the selected category.
-export default function Products({ products, onAdd, onUpdateBrand, onRemove }: Props) {
+export default function Products({
+  products,
+  onAdd,
+  onUpdateBrand,
+  onRemove,
+  query = '',
+}: Props) {
   const [category, setCategory] = useState('base')
   const [name, setName] = useState('')
   const [brand, setBrand] = useState('')
@@ -28,7 +36,9 @@ export default function Products({ products, onAdd, onUpdateBrand, onRemove }: P
   const [expandedId, setExpandedId] = useState<string | null>(null)
   const [brandDraft, setBrandDraft] = useState('')
 
-  const visible = productsInCategory(products, category)
+  const visible = productsInCategory(products, category).filter((p) =>
+    matchesQuery(query, [p.nameEn, p.namePt, p.brand]),
+  )
 
   function handleSubmit(e: FormEvent) {
     e.preventDefault()
@@ -103,7 +113,11 @@ export default function Products({ products, onAdd, onUpdateBrand, onRemove }: P
       </form>
 
       {visible.length === 0 ? (
-        <p className="empty-section">No products in this category yet.</p>
+        <p className="empty-section">
+          {query.trim()
+            ? 'No products match your search.'
+            : 'No products in this category yet.'}
+        </p>
       ) : (
         <ul className="items">
           {visible.map((product) => {

@@ -9,6 +9,7 @@ import {
   type NewInventoryItem,
 } from '../lib/inventory'
 import { dateLabel } from '../lib/recipes'
+import { matchesQuery } from '../lib/search'
 
 interface Props {
   items: InventoryItem[]
@@ -16,6 +17,7 @@ interface Props {
   onUpdateQuantity: (item: InventoryItem, quantity: number) => void
   onRemove: (item: InventoryItem) => void
   onAddToShopping: (item: InventoryItem) => void
+  query?: string
 }
 
 // Home inventory: what Helena has at home, by location, with a quantity
@@ -28,6 +30,7 @@ export default function Inventory({
   onUpdateQuantity,
   onRemove,
   onAddToShopping,
+  query = '',
 }: Props) {
   const [location, setLocation] = useState<Location>('pantry')
   const [name, setName] = useState('')
@@ -36,7 +39,9 @@ export default function Inventory({
   const [expiresAt, setExpiresAt] = useState('')
   const [expandedId, setExpandedId] = useState<string | null>(null)
 
-  const visible = itemsInLocation(items, location)
+  const visible = itemsInLocation(items, location).filter((i) =>
+    matchesQuery(query, [i.nameEn, i.namePt]),
+  )
 
   function handleSubmit(e: FormEvent) {
     e.preventDefault()
@@ -112,7 +117,11 @@ export default function Inventory({
       </form>
 
       {visible.length === 0 ? (
-        <p className="empty-section">No items in this location yet.</p>
+        <p className="empty-section">
+          {query.trim()
+            ? 'No items match your search.'
+            : 'No items in this location yet.'}
+        </p>
       ) : (
         <ul className="items">
           {visible.map((item) => {
