@@ -167,5 +167,38 @@
     ],
     "steps": "Aquece o forno a 200 °C (400 °F). Lava as batatas-doces, fura com um garfo e assa 40 a 45 minutos, até ficarem macias. Aquece o azeite numa frigideira, salteia a cebola roxa 2 minutos, junta o milho, o feijão preto, o cominho e a páprica e cozinha 5 minutos, temperando com sal e pimenta. Abre as batatas ao meio, recheia com a mistura e termina com o abacate, o sumo de lima, o coentro e o feta.",
     "why": "A batata-doce é rica em betacaroteno (vitamina A, uma batata média cobre a dose diária), fibra e potássio; a Tua Saúde sugere 1 a 2 chávenas em cubos por dia. O feijão preto junta proteína e ferro, e o abacate traz gorduras boas que ajudam a absorver a vitamina A."
+  },
+  {
+    "title": "Filé mignon com molho de mostarda e limão",
+    "mealSlot": "dinner",
+    "servings": 2,
+    "pairing": "Plátanos maduros fritos na frigideira",
+    "ingredients": [
+      "2 Private Selection filet mignon steaks, 8 oz each (filé mignon)",
+      "Salt e black pepper (sal e pimenta-do-reino) a gosto",
+      "1 tbsp Kerrygold unsalted butter (manteiga sem sal), para o molho",
+      "1 tbsp mustard (mostarda), para o molho",
+      "Sumo de 1/2 lemon (limão)",
+      "2 ripe plantains (plátanos maduros), para o acompanhamento",
+      "1 tbsp Kerrygold unsalted butter, para fritar os plátanos",
+      "1 fio de olive oil (azeite), para fritar os plátanos"
+    ],
+    "steps": "Tira os filés do frigorífico 30 minutos antes. Tempera com sal e pimenta. Aquece bem uma frigideira em lume alto e sela 4 minutos de cada lado, depois baixa para lume médio e cozinha mais 2 minutos de cada lado. Faz o teste do toque e, se precisares, um corte pequeno para confirmar o ponto. Retira e deixa descansar 5 a 10 minutos. Na mesma frigideira, junta 1 colher de sopa de manteiga e 1 colher de sopa de mostarda, raspa o fundo 1 a 2 minutos e junta o sumo de meio limão. Para os plátanos, corta 2 plátanos maduros em fatias diagonais de cerca de 1 cm e frita com manteiga e um fio de azeite, 2 a 3 minutos de cada lado. Serve os filés com o molho por cima e os plátanos ao lado.",
+    "substitutions": "Se a mostarda for amarela simples, usa só 1/2 colher de sopa no molho. Se os filés ainda estiverem no congelador, descongela em saco fechado em água fria, trocando a água a cada 30 minutos, cerca de 1 hora.",
+    "why": "O filé mignon é o corte mais magro e tenro, com proteína e ferro e pouca gordura. O molho rápido de mostarda e limão dá-lhe sabor sem pesar, e os plátanos maduros trazem doçura e potássio."
+  },
+  {
+    "title": "Top sirloin na air fryer",
+    "mealSlot": "dinner",
+    "servings": 2,
+    "pairing": "Purê de batata-doce com manteiga",
+    "ingredients": [
+      "1 Private Selection Natural Angus Beef Top Sirloin Steak, 10 oz (top sirloin)",
+      "Montreal Steak Seasoning, cerca de 3/4 colher de chá de cada lado",
+      "Kerrygold unsalted butter (manteiga sem sal), para o descanso"
+    ],
+    "steps": "Tira o bife do frigorífico 30 minutos antes. Tempera com o Montreal, cerca de 3/4 de colher de chá de cada lado. Cozinha na air fryer no modo Air Fry a 400 °F, 7 a 8 minutos de cada lado, 14 a 16 minutos no total, para médio. Deixa descansar com manteiga por cima. Serve com o purê de batata-doce. Calibração: 12 minutos no total ficaram curtos para esta espessura, o centro ficou muito rosado.",
+    "substitutions": "Se o bife ficar pouco passado depois de fatiado, volta as fatias à air fryer em camada única, a 400 °F, 2 a 3 minutos.",
+    "why": "O top sirloin é um corte magro e com bom sabor, com proteína e ferro. Na air fryer fica com boa crosta sem precisar de frigideira, e o tempo calibrado de 14 a 16 minutos deixa-o médio sem secar."
   }
 ]
