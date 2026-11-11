@@ -51,6 +51,37 @@ export default function RecipeOfDay({ recipes, onToggleFavorite }: Props) {
           : ''}
       </p>
       {recipe.pairing && <p className="recipe-pairing">Pairs with: {recipe.pairing}</p>}
+      {recipe.why && <p className="recipe-why">{recipe.why}</p>}
+      {(recipe.ingredients.length > 0 || recipe.steps) && (
+        <div className="recipe-details">
+          {recipe.ingredients.length > 0 && (
+            <>
+              <h4>Ingredients</h4>
+              <ul>
+                {recipe.ingredients.map((ing, i) => (
+                  <li key={i}>{ing}</li>
+                ))}
+              </ul>
+            </>
+          )}
+          {recipe.steps && (
+            <>
+              <h4>Method</h4>
+              <p>{recipe.steps}</p>
+            </>
+          )}
+        </div>
+      )}
+      {recipe.substitutions && (
+        <p className="item-note">Substitutions: {recipe.substitutions}</p>
+      )}
+      {recipe.sourceUrl && (
+        <p>
+          <a href={recipe.sourceUrl} target="_blank" rel="noreferrer">
+            Source
+          </a>
+        </p>
+      )}
     </div>
   )
 }

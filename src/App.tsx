@@ -111,13 +111,34 @@ export default function App() {
 
   if (!user) {
     return (
-      <main>
-        <h1>Lamba</h1>
-        <p>Shopping lists, products, home inventory, and recipes in one place.</p>
-        <button onClick={() => signInWithPopup(auth, googleProvider)}>
-          Sign in with Google
-        </button>
-        <p className="version">Lamba v1.5.0</p>
+      <main className="login">
+        <div className="card login-hero">
+          <p className="login-mark" aria-hidden="true">
+            🍳
+          </p>
+          <h1>Lamba</h1>
+          <p className="login-tagline">Your kitchen, in one place.</p>
+          <ul className="login-features">
+            <li>Daily recipe suggestions, with the method to cook them</li>
+            <li>Shopping lists that know what you already have at home</li>
+            <li>Saved recipes, products and home inventory</li>
+          </ul>
+          <button
+            type="button"
+            className="google-button"
+            onClick={() => signInWithPopup(auth, googleProvider)}
+          >
+            <span className="google-g" aria-hidden="true">
+              G
+            </span>
+            Sign in with Google
+          </button>
+          <p className="login-note">
+            Only your Google account signs you in. Your lists and recipes
+            stay private to your account.
+          </p>
+        </div>
+        <p className="version">Lamba v1.6.0</p>
       </main>
     )
   }
@@ -251,7 +272,7 @@ export default function App() {
         )}
         <button onClick={() => signOut(auth)}>Sign out</button>
       </div>
-      <p className="version">Lamba v1.5.0</p>
+      <p className="version">Lamba v1.6.0</p>
     </main>
   )
 }

@@ -255,6 +255,79 @@ button {
   margin-top: 32px;
 }
 
+/* Sign-in screen */
+.login {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 80vh;
+}
+
+.login-hero {
+  text-align: center;
+  padding: 32px 24px;
+}
+
+.login-hero h1 {
+  font-size: 2rem;
+  margin: 8px 0 4px;
+}
+
+.login-mark {
+  font-size: 2.5rem;
+  margin: 0;
+}
+
+.login-tagline {
+  color: #6b6257;
+  font-size: 1.05rem;
+  margin: 0 0 16px;
+}
+
+.login-features {
+  list-style: none;
+  margin: 0 auto 20px;
+  padding: 0;
+  max-width: 360px;
+  text-align: left;
+}
+
+.login-features li {
+  padding: 6px 0 6px 24px;
+  position: relative;
+}
+
+.login-features li::before {
+  content: '✓';
+  position: absolute;
+  left: 0;
+  color: #2e6b30;
+  font-weight: 700;
+}
+
+.google-button {
+  background: #fff;
+  color: #1a1a1a;
+  border: 1px solid #dadce0;
+  padding: 12px 24px;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.google-g {
+  color: #4285f4;
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+.login-note {
+  color: #8a7f6e;
+  font-size: 0.85rem;
+  margin: 16px 0 0;
+}
+
 .empty-section {
   color: #6b6257;
   margin: 16px 0 4px;
