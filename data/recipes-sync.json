@@ -215,5 +215,29 @@
     ],
     "steps": "Faz a papa de maizena com 1 copo de leite e 1 colher de sopa de maizena; junta a colher de margarina e deixa a papa esfriar. Bate no liquidificador ou na batedeira com meia lata de leite Moça e 4 colheres de leite em pó. Usa a lata de leite Moça como medidor para juntar mais leite líquido e bate até ficar cremoso. Variações: abacate (1 abacate maduro batido junto com a base), maracujá (polpa de 3 a 4 maracujás na base já batida), coco (leite de coco no lugar de parte do leite líquido, e coco ralado para textura), morango (morangos frescos batidos na base), manga (manga madura batida na base), ananás (suco de ananás batido na base), limão (suco de 2 limões na base já fria). Para maior quantidade, dobra a receita. Guarda em saquinhos no congelador, 3 a 4 semanas.",
     "why": "O geladinho caseiro é uma sobremesa fresca, feita com poucos ingredientes e sem conservantes. A base é cremosa e cada sabor usa fruta fresca."
+  },
+  {
+    "title": "Salada de grão-de-bico com edamame, pepino e molho de limão e tahini",
+    "mealSlot": "lunch",
+    "servings": 2,
+    "pairing": "pão pita integral torrado com azeite e alho",
+    "ingredients": [
+      "3/4 cup dry chickpeas (grão-de-bico seco), cozido na Cosori (equivale a 1 lata de 15 oz)",
+      "1 cup frozen shelled edamame",
+      "8 cherry tomatoes, cortados ao meio",
+      "1/4 red onion, picada finamente",
+      "1 small carrot, ralada, mais 1/2 cenoura em cubos",
+      "2 tbsp tahini (pasta de sésamo)",
+      "Suco de 1 lemon",
+      "1 clove garlic, picado",
+      "2 tbsp olive oil",
+      "Salt e black pepper a gosto",
+      "Fresh cilantro picado a gosto",
+      "1 pitada de chili em pó (opcional)"
+    ],
+    "steps": "Lava 3/4 de chávena de grão-de-bico seco e coze na Cosori com água a cobrir uns 5 cm, Pressure Cook alta 35 minutos e libertação natural; escorre e deixa arrefecer (ou usa 1 lata de 15 oz, escorrida e lavada). Coze o edamame em água a ferver 3 a 4 minutos, escorre e deixa arrefecer. Numa tigela grande, junta o grão-de-bico, o edamame, os tomates cereja, a cebola roxa e a cenoura. Numa tacinha, bate o tahini com o sumo de limão, o alho, o azeite, o sal e a pimenta até ficar cremoso; se ficar muito espesso, junta uma colher de sopa de água fria. Verte o molho sobre a salada, mistura bem e polvilha com os coentros. Deixa repousar 10 minutos antes de servir. Acompanha com pão pita integral torrado com azeite e alho.",
+    "substitutions": "A receita original leva 1 pepino pequeno em cubos e 1/2 colher de chá de cominho; sem pepino, usa mais cenoura em cubos (e meio abacate em cubos, se quiseres); sem cominho, o molho funciona sem ele ou com uma pitada de chili em pó.",
+    "why": "O grão-de-bico traz proteína vegetal e fibra (8,4 g de proteína e 5,1 g de fibra por 100 g cozido), ferro e folato, e o edamame é uma das poucas proteínas vegetais completas. O Tua Saúde recomenda 3 colheres de sopa de leguminosas por dia, e esta salada cobre isso com folga, mantendo o açúcar no sangue estável e a saciedade por mais tempo.",
+    "sourceUrl": "https://www.tuasaude.com/en/chickpeas/"
   }
 ]
