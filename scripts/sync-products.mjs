@@ -33,11 +33,17 @@ try {
   })
   const db = getFirestore()
 
-  const { users } = await getAuth().listUsers(2)
-  if (users.length !== 1) {
-    throw new Error(`Expected exactly 1 app user, found ${users.length}`)
+  const { users } = await getAuth().listUsers(1000)
+  if (users.length === 0) {
+    throw new Error('No app user found')
   }
-  const uid = users[0].uid
+  // The owner's account is the oldest one: the synced data lives under it.
+  // Other accounts keep their own data and never see it.
+  const owner = [...users].sort(
+    (a, b) =>
+      new Date(a.metadata.creationTime) - new Date(b.metadata.creationTime),
+  )[0]
+  const uid = owner.uid
 
   const productsRef = db.collection(`users/${uid}/products`)
   const snap = await productsRef.get()

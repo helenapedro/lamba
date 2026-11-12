@@ -34,14 +34,20 @@ try {
   })
   stage('firebase app initialized')
 
-  const { users } = await getAuth().listUsers(2)
+  const { users } = await getAuth().listUsers(1000)
   stage(`auth users found: ${users.length}`)
-  if (users.length !== 1) {
-    throw new Error(`Expected exactly 1 app user, found ${users.length}`)
+  if (users.length === 0) {
+    throw new Error('No app user found')
   }
+  // The owner's account is the oldest one: the daily recipe lives under it.
+  // Other accounts keep their own data and never see it.
+  const owner = [...users].sort(
+    (a, b) =>
+      new Date(a.metadata.creationTime) - new Date(b.metadata.creationTime),
+  )[0]
 
   const ref = getFirestore().doc(
-    `users/${users[0].uid}/recipes/daily-${recipe.date}`,
+    `users/${owner.uid}/recipes/daily-${recipe.date}`,
   )
   await ref.set(
     { ...recipe, updatedAt: FieldValue.serverTimestamp() },
