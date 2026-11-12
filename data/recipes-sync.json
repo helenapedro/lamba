@@ -239,5 +239,21 @@
     "substitutions": "A receita original leva 1 pepino pequeno em cubos e 1/2 colher de chá de cominho; sem pepino, usa mais cenoura em cubos (e meio abacate em cubos, se quiseres); sem cominho, o molho funciona sem ele ou com uma pitada de chili em pó.",
     "why": "O grão-de-bico traz proteína vegetal e fibra (8,4 g de proteína e 5,1 g de fibra por 100 g cozido), ferro e folato, e o edamame é uma das poucas proteínas vegetais completas. O Tua Saúde recomenda 3 colheres de sopa de leguminosas por dia, e esta salada cobre isso com folga, mantendo o açúcar no sangue estável e a saciedade por mais tempo.",
     "sourceUrl": "https://www.tuasaude.com/en/chickpeas/"
+  },
+  {
+    "title": "Purê de batata Yukon",
+    "mealSlot": "side",
+    "servings": 2,
+    "pairing": "Top sirloin na air fryer",
+    "ingredients": [
+      "1 lb Yukon Gold potatoes (batata Yukon), about 2 to 3 medium",
+      "2 tbsp Kerrygold unsalted butter (manteiga sem sal)",
+      "1/4 to 1/3 cup whole milk (leite integral), warm",
+      "Salt to taste (sal)",
+      "Pinch of ground nutmeg (noz-moscada), optional"
+    ],
+    "steps": "Descasca as batatas Yukon e corta em cubos iguais. Coze em água com sal 15 a 20 minutos, até a faca entrar sem resistência. Escorre bem e volta a pôr na panela quente 1 minuto para secar. Amassa ainda quente; para ficar bem fino, passa por uma peneira fina ou usa um potato ricer. Leva a lume brando, junta a manteiga e o leite morno aos poucos, mexendo até chegar à textura. Tempera com sal e uma pitada de noz-moscada, se quiseres.",
+    "substitutions": "Sem leite: usa água morna aos poucos no lugar do leite (como na versão do purê de batata-doce). Sem potato ricer: passa por uma peneira fina.",
+    "why": "A batata Yukon Gold já é naturalmente amanteigada e cremosa, com menos amido que a russet, por isso o purê fica liso sem ficar gomoso. Dá potássio, vitamina C e vitamina B6."
   }
 ]
