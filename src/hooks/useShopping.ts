@@ -9,11 +9,9 @@ import {
   query,
   serverTimestamp,
   updateDoc,
-  writeBatch,
 } from 'firebase/firestore'
 import type { User } from 'firebase/auth'
 import { db } from '../firebase'
-import { SEED_ITEMS, SEED_LIST_TITLE } from '../data/seedList'
 import type { ShoppingItem } from '../lib/shopping'
 
 interface ShoppingListDoc {
@@ -25,7 +23,7 @@ export function useShopping(user: User | null) {
   const [list, setList] = useState<ShoppingListDoc | null>(null)
   const [items, setItems] = useState<ShoppingItem[]>([])
   const [loading, setLoading] = useState(true)
-  const seeding = useRef(false)
+  const creating = useRef(false)
 
   useEffect(() => {
     if (!user) {
@@ -40,27 +38,18 @@ export function useShopping(user: User | null) {
       query(listsRef, orderBy('createdAt', 'asc')),
       async (snap) => {
         if (snap.empty) {
-          if (!seeding.current) {
-            seeding.current = true
+          // New account: create one empty list so items can be added.
+          // No starter items: each account starts with its own blank list.
+          if (!creating.current) {
+            creating.current = true
             try {
-              const listRef = await addDoc(listsRef, {
-                title: SEED_LIST_TITLE,
+              await addDoc(listsRef, {
+                title: 'Shopping list',
                 createdAt: serverTimestamp(),
                 updatedAt: serverTimestamp(),
               })
-              const batch = writeBatch(db)
-              const itemsRef = collection(db, 'users', user.uid, 'shoppingItems')
-              for (const seed of SEED_ITEMS) {
-                batch.set(doc(itemsRef), {
-                  ...seed,
-                  listId: listRef.id,
-                  checked: false,
-                  createdAt: serverTimestamp(),
-                })
-              }
-              await batch.commit()
             } finally {
-              seeding.current = false
+              creating.current = false
             }
           }
           return

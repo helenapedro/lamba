@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import {
   addDoc,
   collection,
@@ -7,17 +7,14 @@ import {
   onSnapshot,
   serverTimestamp,
   updateDoc,
-  writeBatch,
 } from 'firebase/firestore'
 import type { User } from 'firebase/auth'
 import { db } from '../firebase'
-import { SEED_RECIPES } from '../data/seedRecipes'
 import type { NewRecipe, Recipe } from '../lib/recipes'
 
 export function useRecipes(user: User | null) {
   const [recipes, setRecipes] = useState<Recipe[]>([])
   const [loading, setLoading] = useState(true)
-  const seeding = useRef(false)
 
   useEffect(() => {
     if (!user) {
@@ -27,25 +24,7 @@ export function useRecipes(user: User | null) {
     }
     setLoading(true)
     const recipesRef = collection(db, 'users', user.uid, 'recipes')
-    const unsub = onSnapshot(recipesRef, async (snap) => {
-      if (snap.empty) {
-        if (!seeding.current) {
-          seeding.current = true
-          try {
-            const batch = writeBatch(db)
-            for (const seed of SEED_RECIPES) {
-              batch.set(doc(recipesRef), {
-                ...seed,
-                createdAt: serverTimestamp(),
-              })
-            }
-            await batch.commit()
-          } finally {
-            seeding.current = false
-          }
-        }
-        return
-      }
+    const unsub = onSnapshot(recipesRef, (snap) => {
       setRecipes(
         snap.docs.map((d) => ({
           id: d.id,

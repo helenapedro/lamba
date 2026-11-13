@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import {
   addDoc,
   collection,
@@ -7,17 +7,14 @@ import {
   onSnapshot,
   serverTimestamp,
   updateDoc,
-  writeBatch,
 } from 'firebase/firestore'
 import type { User } from 'firebase/auth'
 import { db } from '../firebase'
-import { SEED_PRODUCTS } from '../data/seedProducts'
 import type { NewProduct, Product } from '../lib/products'
 
 export function useProducts(user: User | null) {
   const [products, setProducts] = useState<Product[]>([])
   const [loading, setLoading] = useState(true)
-  const seeding = useRef(false)
 
   useEffect(() => {
     if (!user) {
@@ -27,25 +24,7 @@ export function useProducts(user: User | null) {
     }
     setLoading(true)
     const productsRef = collection(db, 'users', user.uid, 'products')
-    const unsub = onSnapshot(productsRef, async (snap) => {
-      if (snap.empty) {
-        if (!seeding.current) {
-          seeding.current = true
-          try {
-            const batch = writeBatch(db)
-            for (const seed of SEED_PRODUCTS) {
-              batch.set(doc(productsRef), {
-                ...seed,
-                createdAt: serverTimestamp(),
-              })
-            }
-            await batch.commit()
-          } finally {
-            seeding.current = false
-          }
-        }
-        return
-      }
+    const unsub = onSnapshot(productsRef, (snap) => {
       setProducts(
         snap.docs.map((d) => ({
           id: d.id,

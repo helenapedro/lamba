@@ -141,7 +141,7 @@ export default function App() {
             stay private to your account.
           </p>
         </div>
-        <p className="version">Lamba v1.6.1</p>
+        <p className="version">Lamba v1.6.2</p>
       </main>
     )
   }
@@ -275,7 +275,7 @@ export default function App() {
         )}
         <button onClick={() => signOut(auth)}>Sign out</button>
       </div>
-      <p className="version">Lamba v1.6.1</p>
+      <p className="version">Lamba v1.6.2</p>
     </main>
   )
 }

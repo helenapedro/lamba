@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import {
   addDoc,
   collection,
@@ -7,17 +7,14 @@ import {
   onSnapshot,
   serverTimestamp,
   updateDoc,
-  writeBatch,
 } from 'firebase/firestore'
 import type { User } from 'firebase/auth'
 import { db } from '../firebase'
-import { SEED_INVENTORY } from '../data/seedInventory'
 import type { InventoryItem, NewInventoryItem } from '../lib/inventory'
 
 export function useInventory(user: User | null) {
   const [items, setItems] = useState<InventoryItem[]>([])
   const [loading, setLoading] = useState(true)
-  const seeding = useRef(false)
 
   useEffect(() => {
     if (!user) {
@@ -27,25 +24,7 @@ export function useInventory(user: User | null) {
     }
     setLoading(true)
     const inventoryRef = collection(db, 'users', user.uid, 'inventory')
-    const unsub = onSnapshot(inventoryRef, async (snap) => {
-      if (snap.empty) {
-        if (!seeding.current) {
-          seeding.current = true
-          try {
-            const batch = writeBatch(db)
-            for (const seed of SEED_INVENTORY) {
-              batch.set(doc(inventoryRef), {
-                ...seed,
-                createdAt: serverTimestamp(),
-              })
-            }
-            await batch.commit()
-          } finally {
-            seeding.current = false
-          }
-        }
-        return
-      }
+    const unsub = onSnapshot(inventoryRef, (snap) => {
       setItems(
         snap.docs.map((d) => ({
           id: d.id,
