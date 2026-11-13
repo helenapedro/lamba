@@ -113,10 +113,13 @@ export default function App() {
     return (
       <main className="login">
         <div className="card login-hero">
-          <p className="login-mark" aria-hidden="true">
-            🍳
-          </p>
-          <h1>Lamba</h1>
+          <img
+            className="login-logo"
+            src="/lamba-logo.jpg"
+            alt="Lamba logo"
+            width="144"
+            height="144"
+          />
           <p className="login-tagline">Your kitchen, in one place.</p>
           <ul className="login-features">
             <li>Daily recipe suggestions, with the method to cook them</li>
@@ -138,7 +141,7 @@ export default function App() {
             stay private to your account.
           </p>
         </div>
-        <p className="version">Lamba v1.6.0</p>
+        <p className="version">Lamba v1.6.1</p>
       </main>
     )
   }
@@ -272,7 +275,7 @@ export default function App() {
         )}
         <button onClick={() => signOut(auth)}>Sign out</button>
       </div>
-      <p className="version">Lamba v1.6.0</p>
+      <p className="version">Lamba v1.6.1</p>
     </main>
   )
 }

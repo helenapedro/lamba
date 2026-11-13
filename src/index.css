@@ -273,9 +273,13 @@ button {
   margin: 8px 0 4px;
 }
 
-.login-mark {
-  font-size: 2.5rem;
-  margin: 0;
+.login-logo {
+  width: 144px;
+  height: 144px;
+  border-radius: 50%;
+  object-fit: cover;
+  display: block;
+  margin: 0 auto;
 }
 
 .login-tagline {
