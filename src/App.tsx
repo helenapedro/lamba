@@ -158,7 +158,7 @@ export default function App() {
             stay private to your account.
           </p>
         </div>
-        <p className="version">Lamba v1.7.0</p>
+        <p className="version">Lamba v1.7.1</p>
       </main>
     )
   }
@@ -322,7 +322,7 @@ export default function App() {
           />
         )}
       </div>
-      <p className="version">Lamba v1.7.0</p>
+      <p className="version">Lamba v1.7.1</p>
     </main>
   )
 }

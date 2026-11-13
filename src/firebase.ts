@@ -18,5 +18,9 @@ const firebaseConfig = {
 export const app = initializeApp(firebaseConfig)
 export const auth = getAuth(app)
 export const googleProvider = new GoogleAuthProvider()
+// Always show the Google account chooser on sign-in, so switching
+// between accounts actually offers the choice instead of silently
+// re-entering the last-used account.
+googleProvider.setCustomParameters({ prompt: 'select_account' })
 export const db = getFirestore(app)
 export const storage = getStorage(app)
