@@ -23,7 +23,7 @@ function stage(msg) {
 }
 
 try {
-  const email = process.env.CLEANUP_EMAIL ?? TARGET_EMAIL
+  const email = (process.env.CLEANUP_EMAIL || '').trim() || TARGET_EMAIL
   if (email !== TARGET_EMAIL) {
     throw new Error('Refusing: this script only cleans the test account')
   }

@@ -1,7 +1,8 @@
 name: Cleanup user data (one-off)
 
 # Temporary workflow: deletes the copied starter data under the test
-# account mbeua94@gmail.com. Triggered manually, then removed.
+# account mbeua94@gmail.com. Triggered by pushing a change to this file
+# (the dispatch API is not available to the push credential), then removed.
 on:
   workflow_dispatch:
     inputs:
@@ -9,6 +10,9 @@ on:
         description: 'Email of the account to clean (must be mbeua94@gmail.com)'
         required: true
         default: 'mbeua94@gmail.com'
+  push:
+    paths:
+      - '.github/workflows/cleanup-user.yml'
 
 jobs:
   cleanup:
