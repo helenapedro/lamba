@@ -17,6 +17,7 @@ import {
 import { normalizeName, parseShoppingQuantity } from './lib/shopping'
 import { savedCopyFor } from './lib/recipes'
 import ShoppingList from './components/ShoppingList'
+import AppHeader from './components/AppHeader'
 import RecipeOfDay from './components/RecipeOfDay'
 import Recipes from './components/Recipes'
 import PublicRecipes from './components/PublicRecipes'
@@ -158,15 +159,14 @@ export default function App() {
             stay private to your account.
           </p>
         </div>
-        <p className="version">Lamba v1.7.1</p>
+        <p className="version">Lamba v1.7.2</p>
       </main>
     )
   }
 
   return (
     <main>
-      <h1>Lamba</h1>
-      <p>Hello, {user.displayName ?? user.email}.</p>
+      <AppHeader user={user} onOpenProfile={() => setView('profile')} />
 
       <nav className="navbar" aria-label="Sections">
         {VIEWS.map((v) => (
@@ -322,7 +322,7 @@ export default function App() {
           />
         )}
       </div>
-      <p className="version">Lamba v1.7.1</p>
+      <p className="version">Lamba v1.7.2</p>
     </main>
   )
 }

@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import AppHeader from '../components/AppHeader'
 import ShoppingList from '../components/ShoppingList'
 import RecipeOfDay from '../components/RecipeOfDay'
 import Recipes from '../components/Recipes'
@@ -176,6 +177,7 @@ export default function ShoppingPreview() {
 
   return (
     <main>
+      <AppHeader user={MOCK_USER} onOpenProfile={() => setView('profile')} />
       <h1>Preview (dev)</h1>
       <nav className="navbar" aria-label="Sections">
         {VIEWS.map((v) => (
