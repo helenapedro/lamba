@@ -3,6 +3,8 @@ import { onAuthStateChanged, signInWithPopup, signOut, type User } from 'firebas
 import { auth, googleProvider } from './firebase'
 import { useShopping } from './hooks/useShopping'
 import { useRecipes } from './hooks/useRecipes'
+import { useDailyRecipe } from './hooks/useDailyRecipe'
+import { useIsOwner } from './hooks/useIsOwner'
 import { usePublicRecipes } from './hooks/usePublicRecipes'
 import { useProducts } from './hooks/useProducts'
 import { useInventory } from './hooks/useInventory'
@@ -13,7 +15,7 @@ import {
   type InventoryItem,
 } from './lib/inventory'
 import { normalizeName, parseShoppingQuantity } from './lib/shopping'
-import { dayRecipe, todayStr } from './lib/recipes'
+import { savedCopyFor } from './lib/recipes'
 import ShoppingList from './components/ShoppingList'
 import RecipeOfDay from './components/RecipeOfDay'
 import Recipes from './components/Recipes'
@@ -49,13 +51,15 @@ export default function App() {
   const [view, setView] = useState<View>('home')
   const shopping = useShopping(user)
   const recipesState = useRecipes(user)
+  const dailyState = useDailyRecipe(user)
+  const isOwner = useIsOwner(user)
   const publicState = usePublicRecipes(user)
   const productsState = useProducts(user)
   const inventoryState = useInventory(user)
-  const { recipe: homeRecipe, isToday } = dayRecipe(
-    recipesState.recipes,
-    todayStr(),
-  )
+  // The user's saved copy of today's shared recipe, if they kept it.
+  const dailySavedCopy = dailyState.daily
+    ? savedCopyFor(recipesState.recipes, dailyState.daily.title)
+    : undefined
 
   useEffect(() => {
     const unsub = onAuthStateChanged(auth, (u) => {
@@ -198,14 +202,16 @@ export default function App() {
       {view === 'home' && (
         <>
           <RecipeOfDay
-            recipes={recipesState.recipes}
+            daily={dailyState.daily}
+            isToday={dailyState.isToday}
+            savedCopy={dailySavedCopy}
             onToggleFavorite={recipesState.updateFavorite}
             onSaveDaily={recipesState.saveDailyRecipe}
           />
-          {isToday && homeRecipe?.fruit && (
+          {dailyState.isToday && dailyState.daily?.fruit && (
             <div className="card">
               <h2>Seasonal fruit</h2>
-              <p>{homeRecipe.fruit}</p>
+              <p>{dailyState.daily.fruit}</p>
             </div>
           )}
         </>
@@ -306,7 +312,7 @@ export default function App() {
       ))}
 
       <div className="button-row">
-        {shopping.list && (
+        {shopping.list && isOwner && (
           <ExportButton
             shoppingTitle={shopping.list.title}
             shoppingItems={shopping.items}

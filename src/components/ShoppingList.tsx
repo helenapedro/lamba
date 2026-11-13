@@ -85,7 +85,8 @@ export default function ShoppingList({
           placeholder="Quantity (optional, e.g. 2 lb)"
           aria-label="Quantity"
         />
-        <div className="section-chips" role="radiogroup" aria-label="Section">
+        <p className="form-caption">Category</p>
+        <div className="section-chips" role="radiogroup" aria-label="Category">
           {SECTIONS.map((s) => (
             <button
               key={s.id}

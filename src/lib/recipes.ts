@@ -146,6 +146,20 @@ export function todayStr(d: Date = new Date()): string {
   return `${d.getFullYear()}-${m}-${day}`
 }
 
+/**
+ * The user's saved copy of a recipe title, if any: a recipe in their own
+ * collection with that title. `excludeId` skips one document (the daily
+ * recipe itself, when it also lives in the same collection, as in the
+ * dev preview or in Helena's older daily documents).
+ */
+export function savedCopyFor(
+  recipes: Recipe[],
+  title: string,
+  excludeId?: string,
+): Recipe | undefined {
+  return recipes.find((r) => r.title === title && r.id !== excludeId)
+}
+
 /** The recipe suggested on exactly this date, if any. */
 export function recipeOn(recipes: Recipe[], date: string): Recipe | undefined {
   return recipes.find((r) => r.date === date)

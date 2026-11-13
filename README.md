@@ -56,7 +56,9 @@ The assistant writes to the app through repo files that the deploy
 workflow syncs into Firestore with the deploy service account (never
 printed in logs, since Actions logs on a public repo are public):
 
-- `data/daily-recipe.json` → the recipe of the day (upsert by date).
+- `data/daily-recipe.json` → the shared recipe of the day, written to the
+  dailyRecipes collection (one document per date, the same recipe for
+  every signed-in user), and the app owner recorded in config/app.
 - `data/shopping-additions.json` → items added to the shopping list,
   skipping names already present.
 - `data/products-sync.json` → product updates, matched by English name:

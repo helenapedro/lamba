@@ -1,27 +1,30 @@
-import {
-  dateLabel,
-  dayRecipe,
-  slotLabel,
-  todayStr,
-  type Recipe,
-} from '../lib/recipes'
+import { dateLabel, slotLabel, type Recipe } from '../lib/recipes'
 
 interface Props {
-  recipes: Recipe[]
+  /** The shared daily recipe (today's, or the most recent one). */
+  daily: Recipe | undefined
+  isToday: boolean
+  /** The user's own saved copy of this title, if they kept it. */
+  savedCopy: Recipe | undefined
+  /** Favorites the saved copy only; the shared doc is never written. */
   onToggleFavorite: (recipe: Recipe, favorite: boolean) => void
   onSaveDaily: (recipe: Recipe) => void
 }
 
-// The daily recipe card: today's suggested recipe when one is set for
+// The daily recipe card: today's shared suggestion when one is set for
 // today, otherwise the most recent daily recipe, labeled with its date.
-// The star marks it as a favorite, shared with the Recipes list.
 // "Save recipe" keeps a private copy in the user's own recipes; without
-// it, the suggestion stays only on this card.
-export default function RecipeOfDay({ recipes, onToggleFavorite, onSaveDaily }: Props) {
-  const today = todayStr()
-  const { recipe, isToday } = dayRecipe(recipes, today)
-
-  if (!recipe) {
+// it, the suggestion stays only on this card. The star only appears
+// once the recipe is saved, because it favorites the saved copy, never
+// the shared document.
+export default function RecipeOfDay({
+  daily,
+  isToday,
+  savedCopy,
+  onToggleFavorite,
+  onSaveDaily,
+}: Props) {
+  if (!daily) {
     return (
       <div className="card">
         <h2>Recipe of the day</h2>
@@ -30,26 +33,27 @@ export default function RecipeOfDay({ recipes, onToggleFavorite, onSaveDaily }: 
     )
   }
 
-  // Saved when the user's recipes already hold a copy of this title
-  // beyond the daily document itself.
-  const saved = recipes.some(
-    (r) => r.title === recipe.title && r.id !== recipe.id,
-  )
+  const recipe = daily
+  const saved = savedCopy !== undefined
 
   return (
     <div className="card">
       <h2>Recipe of the day</h2>
       <div className="recipe-head">
         <p className="recipe-title">{recipe.title}</p>
-        <button
-          type="button"
-          className={recipe.favorite ? 'favorite-button active' : 'favorite-button'}
-          aria-label={`Toggle favorite for ${recipe.title}`}
-          aria-pressed={!!recipe.favorite}
-          onClick={() => onToggleFavorite(recipe, !recipe.favorite)}
-        >
-          {recipe.favorite ? '★' : '☆'}
-        </button>
+        {savedCopy && (
+          <button
+            type="button"
+            className={
+              savedCopy.favorite ? 'favorite-button active' : 'favorite-button'
+            }
+            aria-label={`Toggle favorite for ${recipe.title}`}
+            aria-pressed={!!savedCopy.favorite}
+            onClick={() => onToggleFavorite(savedCopy, !savedCopy.favorite)}
+          >
+            {savedCopy.favorite ? '★' : '☆'}
+          </button>
+        )}
       </div>
       <p className="recipe-meta">
         {slotLabel(recipe.mealSlot)} · for {recipe.servings}

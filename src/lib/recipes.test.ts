@@ -7,6 +7,7 @@ import {
   latestDaily,
   recipeOn,
   recipesInSlot,
+  savedCopyFor,
   sortRecipes,
   todayStr,
   toPublicRecipe,
@@ -115,6 +116,23 @@ describe('favoriteRecipes', () => {
       'Fav old',
     ])
     expect(favoriteRecipes(recipes)).toEqual([])
+  })
+})
+
+describe('savedCopyFor', () => {
+  it('finds a recipe with the same title in the user collection', () => {
+    const mine = [
+      recipe({ id: 'daily-2026-11-12', title: 'Salad', date: '2026-11-12' }),
+      recipe({ id: 'saved-1', title: 'Salad' }),
+    ]
+    expect(savedCopyFor(mine, 'Salad')?.id).toBe('daily-2026-11-12')
+    expect(savedCopyFor(mine, 'Salad', 'daily-2026-11-12')?.id).toBe(
+      'saved-1',
+    )
+    expect(savedCopyFor(mine, 'Soup')).toBeUndefined()
+    expect(savedCopyFor(mine, 'Salad', 'saved-1')?.id).toBe(
+      'daily-2026-11-12',
+    )
   })
 })
 

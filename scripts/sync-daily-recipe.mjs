@@ -1,11 +1,15 @@
-// Sync the daily recipe into Firestore so the app's "Recipe of the day"
-// card shows it. Runs in GitHub Actions after the deploy step, using the
-// same service account. The recipe lives in data/daily-recipe.json and is
-// upserted as users/{uid}/recipes/daily-<date>, so re-runs update the
-// same document instead of duplicating it.
+// Sync the daily recipe into Firestore so every signed-in user's
+// "Recipe of the day" card shows the same recipe. Runs in GitHub Actions
+// after the deploy step, using the same service account. The recipe lives
+// in data/daily-recipe.json and is upserted as dailyRecipes/<date>, so
+// re-runs update the same document instead of duplicating it. The
+// document is shared: any authenticated user may read it (see
+// firestore.rules); clients never write it.
 //
-// The owner uid is never printed: Actions logs on a public repo are
-// public.
+// The same run records the app owner in config/app: the owner's account
+// is the oldest one, and the client uses it to decide who sees the
+// Export data button. The owner uid is never printed: Actions logs on a
+// public repo are public.
 import { existsSync, readFileSync } from 'node:fs'
 import { applicationDefault, initializeApp } from 'firebase-admin/app'
 import { getAuth } from 'firebase-admin/auth'
@@ -39,21 +43,28 @@ try {
   if (users.length === 0) {
     throw new Error('No app user found')
   }
-  // The owner's account is the oldest one: the daily recipe lives under it.
-  // Other accounts keep their own data and never see it.
+  // The owner's account is the oldest one.
   const owner = [...users].sort(
     (a, b) =>
       new Date(a.metadata.creationTime) - new Date(b.metadata.creationTime),
   )[0]
 
-  const ref = getFirestore().doc(
-    `users/${owner.uid}/recipes/daily-${recipe.date}`,
-  )
-  await ref.set(
+  const db = getFirestore()
+  const dailyRef = db.doc(`dailyRecipes/${recipe.date}`)
+  await dailyRef.set(
     { ...recipe, updatedAt: FieldValue.serverTimestamp() },
     { merge: true },
   )
-  stage('recipe written to Firestore')
+  stage('daily recipe written to Firestore')
+
+  await db.doc('config/app').set(
+    {
+      ownerUid: owner.uid,
+      updatedAt: FieldValue.serverTimestamp(),
+    },
+    { merge: true },
+  )
+  stage('owner config written to Firestore')
 } catch (err) {
   console.error(`[sync] FAILED: ${err?.code ?? ''} ${err?.message ?? err}`)
   process.exit(1)

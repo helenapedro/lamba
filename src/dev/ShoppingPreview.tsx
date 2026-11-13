@@ -15,6 +15,7 @@ import {
 import {
   dailySaveCopy,
   dayRecipe,
+  savedCopyFor,
   todayStr,
   toPublicRecipe,
   toSavedRecipe,
@@ -147,7 +148,15 @@ export default function ShoppingPreview() {
   const [inventory, setInventory] = useState<InventoryItem[]>(INITIAL_INVENTORY)
   const [query, setQuery] = useState('')
   const [view, setView] = useState<View>('home')
+  // Preview-only owner switch, so the Export button gating can be
+  // clicked through both ways. The real app reads config/app instead.
+  const [isOwner, setIsOwner] = useState(true)
   const { recipe: homeRecipe, isToday } = dayRecipe(recipes, todayStr())
+  // The preview keeps the daily recipe inside its own recipes, so the
+  // daily document itself is excluded from the saved-copy lookup.
+  const dailySavedCopy = homeRecipe
+    ? savedCopyFor(recipes, homeRecipe.title, homeRecipe.id)
+    : undefined
 
   // In-memory mirror of useRecipes.saveCopy: upsert by title, so saving
   // the same title twice never duplicates.
@@ -200,7 +209,9 @@ export default function ShoppingPreview() {
       {view === 'home' && (
         <>
           <RecipeOfDay
-            recipes={recipes}
+            daily={homeRecipe}
+            isToday={isToday}
+            savedCopy={dailySavedCopy}
             onToggleFavorite={(recipe, favorite) =>
               setRecipes((prev) =>
                 prev.map((r) => (r.id === recipe.id ? { ...r, favorite } : r)),
@@ -399,13 +410,18 @@ export default function ShoppingPreview() {
       />
       )}
       <div className="button-row">
-        <ExportButton
-          shoppingTitle="Preview list"
-          shoppingItems={items}
-          recipes={recipes}
-          products={products}
-          inventory={inventory}
-        />
+        {isOwner && (
+          <ExportButton
+            shoppingTitle="Preview list"
+            shoppingItems={items}
+            recipes={recipes}
+            products={products}
+            inventory={inventory}
+          />
+        )}
+        <button type="button" onClick={() => setIsOwner(!isOwner)}>
+          {isOwner ? 'Preview as non-owner' : 'Preview as owner'}
+        </button>
       </div>
     </main>
   )

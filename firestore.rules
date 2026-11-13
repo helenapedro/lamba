@@ -22,5 +22,22 @@ service cloud.firestore {
       allow delete: if request.auth != null
         && resource.data.authorUid == request.auth.uid;
     }
+
+    // The shared daily recipe, one document per day (dailyRecipes/{date}).
+    // Every signed-in user reads the same recipe. Clients never write
+    // here: only the deploy service account writes it, and the Admin SDK
+    // bypasses these rules.
+    match /dailyRecipes/{date} {
+      allow read: if request.auth != null;
+      allow write: if false;
+    }
+
+    // App config (config/app): written by the deploy sync script only.
+    // Any signed-in user may read it (the client needs ownerUid to decide
+    // who sees the Export button); clients never write it.
+    match /config/app {
+      allow read: if request.auth != null;
+      allow write: if false;
+    }
   }
 }

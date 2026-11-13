@@ -233,6 +233,15 @@ button {
   color: #6b6257;
 }
 
+/* Caption above the category chips in the add-item form: the chips
+ * choose the new item's category, they are not just a filter. */
+.form-caption {
+  flex: 1 1 100%;
+  font-size: 0.85rem;
+  color: #6b6257;
+  margin: 0;
+}
+
 .search-bar {
   display: flex;
   gap: 8px;
