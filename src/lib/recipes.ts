@@ -20,9 +20,111 @@ export interface Recipe {
   favorite?: boolean
   /** Seasonal fruit note that came with a daily recipe, if any. */
   fruit?: string
+  /**
+   * Who can see this recipe: 'private' (only the owner) or 'public'
+   * (any signed-in user, via the publicRecipes collection).
+   * Missing means private: every existing and synced recipe is private
+   * until the owner changes it.
+   */
+  visibility?: 'public' | 'private'
 }
 
 export type NewRecipe = Omit<Recipe, 'id'>
+
+/**
+ * A recipe shared with other signed-in users. Lives in the top-level
+ * publicRecipes collection, under the same document id as the owner's
+ * private copy, so unsharing is a single delete. It carries no
+ * visibility field: being in this collection is what makes it public.
+ */
+export interface PublicRecipe {
+  id: string
+  authorUid: string
+  authorName: string
+  title: string
+  mealSlot: string
+  pairing?: string
+  servings: number
+  why?: string
+  ingredients: string[]
+  steps: string
+  substitutions?: string
+  sourceUrl?: string
+  date?: string
+}
+
+/** True only when the owner explicitly made the recipe public. */
+export function isPublic(recipe: Recipe): boolean {
+  return recipe.visibility === 'public'
+}
+
+/**
+ * The public copy of a private recipe: same content fields, plus the
+ * author. No id (the caller uses the private recipe's id as the
+ * document id), no favorite, no fruit, no visibility.
+ */
+export function toPublicRecipe(
+  recipe: Recipe,
+  authorUid: string,
+  authorName: string,
+): Omit<PublicRecipe, 'id'> {
+  return {
+    authorUid,
+    authorName,
+    title: recipe.title,
+    mealSlot: recipe.mealSlot,
+    ...(recipe.pairing ? { pairing: recipe.pairing } : {}),
+    servings: recipe.servings,
+    ...(recipe.why ? { why: recipe.why } : {}),
+    ingredients: recipe.ingredients,
+    steps: recipe.steps,
+    ...(recipe.substitutions
+      ? { substitutions: recipe.substitutions }
+      : {}),
+    ...(recipe.sourceUrl ? { sourceUrl: recipe.sourceUrl } : {}),
+    ...(recipe.date ? { date: recipe.date } : {}),
+  }
+}
+
+/**
+ * The fields a daily recipe is saved with: the same content fields the
+ * recipes sync uses. No date (date is owned by the daily channel), no
+ * fruit, no favorite, no visibility (missing means private).
+ */
+export function dailySaveCopy(recipe: Recipe): NewRecipe {
+  return {
+    title: recipe.title,
+    mealSlot: recipe.mealSlot,
+    ...(recipe.pairing ? { pairing: recipe.pairing } : {}),
+    servings: recipe.servings,
+    ...(recipe.why ? { why: recipe.why } : {}),
+    ingredients: recipe.ingredients,
+    steps: recipe.steps,
+    ...(recipe.substitutions
+      ? { substitutions: recipe.substitutions }
+      : {}),
+    ...(recipe.sourceUrl ? { sourceUrl: recipe.sourceUrl } : {}),
+  }
+}
+
+/**
+ * A public recipe copied into the signed-in user's own recipes: the
+ * same content fields, as a private recipe (no visibility field, no
+ * author, no id).
+ */
+export function toSavedRecipe(pub: PublicRecipe): NewRecipe {
+  return {
+    title: pub.title,
+    mealSlot: pub.mealSlot,
+    ...(pub.pairing ? { pairing: pub.pairing } : {}),
+    servings: pub.servings,
+    ...(pub.why ? { why: pub.why } : {}),
+    ingredients: pub.ingredients,
+    steps: pub.steps,
+    ...(pub.substitutions ? { substitutions: pub.substitutions } : {}),
+    ...(pub.sourceUrl ? { sourceUrl: pub.sourceUrl } : {}),
+  }
+}
 
 export const MEAL_SLOTS = [
   { id: 'breakfast', label: 'Breakfast' },

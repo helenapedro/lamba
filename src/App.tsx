@@ -3,6 +3,7 @@ import { onAuthStateChanged, signInWithPopup, signOut, type User } from 'firebas
 import { auth, googleProvider } from './firebase'
 import { useShopping } from './hooks/useShopping'
 import { useRecipes } from './hooks/useRecipes'
+import { usePublicRecipes } from './hooks/usePublicRecipes'
 import { useProducts } from './hooks/useProducts'
 import { useInventory } from './hooks/useInventory'
 import {
@@ -16,18 +17,29 @@ import { dayRecipe, todayStr } from './lib/recipes'
 import ShoppingList from './components/ShoppingList'
 import RecipeOfDay from './components/RecipeOfDay'
 import Recipes from './components/Recipes'
+import PublicRecipes from './components/PublicRecipes'
+import Profile from './components/Profile'
 import Products from './components/Products'
 import Inventory from './components/Inventory'
 import ExportButton from './components/ExportButton'
 
-type View = 'home' | 'shopping' | 'recipes' | 'products' | 'inventory'
+type View =
+  | 'home'
+  | 'shopping'
+  | 'recipes'
+  | 'public'
+  | 'products'
+  | 'inventory'
+  | 'profile'
 
 const VIEWS: { id: View; label: string }[] = [
   { id: 'home', label: 'Home' },
   { id: 'shopping', label: 'Shopping' },
   { id: 'recipes', label: 'Recipes' },
+  { id: 'public', label: 'Public recipes' },
   { id: 'products', label: 'Products' },
   { id: 'inventory', label: 'At home' },
+  { id: 'profile', label: 'Profile' },
 ]
 
 export default function App() {
@@ -37,6 +49,7 @@ export default function App() {
   const [view, setView] = useState<View>('home')
   const shopping = useShopping(user)
   const recipesState = useRecipes(user)
+  const publicState = usePublicRecipes(user)
   const productsState = useProducts(user)
   const inventoryState = useInventory(user)
   const { recipe: homeRecipe, isToday } = dayRecipe(
@@ -141,7 +154,7 @@ export default function App() {
             stay private to your account.
           </p>
         </div>
-        <p className="version">Lamba v1.6.2</p>
+        <p className="version">Lamba v1.7.0</p>
       </main>
     )
   }
@@ -187,6 +200,7 @@ export default function App() {
           <RecipeOfDay
             recipes={recipesState.recipes}
             onToggleFavorite={recipesState.updateFavorite}
+            onSaveDaily={recipesState.saveDailyRecipe}
           />
           {isToday && homeRecipe?.fruit && (
             <div className="card">
@@ -228,9 +242,37 @@ export default function App() {
           onAdd={recipesState.addRecipe}
           onRemove={recipesState.removeRecipe}
           onToggleFavorite={recipesState.updateFavorite}
+          onToggleVisibility={recipesState.updateVisibility}
           query={query}
         />
       ))}
+
+      {view === 'public' && (publicState.loading ? (
+        <div className="card">
+          <h2>Public recipes</h2>
+          <p>Loading public recipes...</p>
+        </div>
+      ) : (
+        <PublicRecipes
+          publicRecipes={publicState.publicRecipes}
+          savedTitles={recipesState.recipes.map((r) => r.title)}
+          onSaveCopy={recipesState.savePublicCopy}
+          query={query}
+        />
+      ))}
+
+      {view === 'profile' && (
+        <Profile
+          user={user}
+          counts={{
+            recipes: recipesState.recipes.length,
+            favorites: recipesState.recipes.filter((r) => r.favorite).length,
+            shoppingItems: shopping.items.length,
+            inventoryItems: inventoryState.items.length,
+          }}
+          onSignOut={() => signOut(auth)}
+        />
+      )}
 
       {view === 'products' && (productsState.loading ? (
         <div className="card">
@@ -273,9 +315,8 @@ export default function App() {
             inventory={inventoryState.items}
           />
         )}
-        <button onClick={() => signOut(auth)}>Sign out</button>
       </div>
-      <p className="version">Lamba v1.6.2</p>
+      <p className="version">Lamba v1.7.0</p>
     </main>
   )
 }

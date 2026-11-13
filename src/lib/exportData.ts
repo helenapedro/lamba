@@ -64,6 +64,7 @@ export function buildExportData({
       ...(r.substitutions ? { substitutions: r.substitutions } : {}),
       ...(r.sourceUrl ? { sourceUrl: r.sourceUrl } : {}),
       ...(r.favorite ? { favorite: true } : {}),
+      ...(r.visibility ? { visibility: r.visibility } : {}),
       ...(r.date ? { date: r.date } : {}),
     })),
     products: products.map((p) => ({

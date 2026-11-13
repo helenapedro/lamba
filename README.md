@@ -14,7 +14,9 @@ inventory, and recipes, including a daily recipe suggestion.
 - Photos: none, by the owner's decision. Products record the brand she
   buys instead of a picture.
 
-Access is restricted to the owner account through Firestore security rules.
+Access is restricted to the owner account through Firestore security rules,
+except for recipes an owner marks Public, which any signed-in user can
+read in the Public recipes view.
 
 Implemented so far: a welcoming Google sign-in screen, a Firestore shopping list with a
 category filter (now including a Household category for non-food items),
@@ -36,10 +38,17 @@ shopping checks without moving anything into inventory. Items can also
 be marked as in cart (found at the store or in the pickup cart, not yet
 bought): they sort between still to find and bought, show an In cart
 note and a progress count, are skipped by Shopping done, and lose the
-mark when checked as bought. A navbar (Home, Shopping, Recipes,
-Products, At home) keeps the home page to the recipe of the day plus a
+mark when checked as bought. A navbar (Home, Shopping, Recipes, Public
+recipes,
+Products, At home, Profile) keeps the home page to the recipe of the day plus a
 seasonal fruit card, with the other sections one tap away; search
-appears on those views, not on home.
+appears on those views, not on home. The recipe of the day has a Save
+recipe button that keeps a private copy in the user's own recipes, and
+each saved recipe can be marked Public (visible to other signed-in
+users) or Private (the default); the Public recipes view lists shared
+recipes with their author and a Save a copy button. The Profile page
+shows the signed-in Google account, counts of saved recipes, favorites,
+shopping items and items at home, and the Sign out button.
 
 ## Assistant sync
 

@@ -99,6 +99,36 @@ try {
     }
     await found.ref.update(updates)
     updated++
+    // A recipe the owner shared stays shared: refresh its public copy
+    // with the same updated content. Private recipes have no copy.
+    if (found.data.visibility === 'public') {
+      const merged = { ...found.data, ...updates }
+      const author = await getAuth().getUser(uid)
+      await db
+        .collection('publicRecipes')
+        .doc(found.ref.id)
+        .set(
+          {
+            authorUid: uid,
+            authorName: author.displayName ?? author.email ?? 'Lamba user',
+            title: merged.title,
+            mealSlot: merged.mealSlot,
+            ...(merged.pairing ? { pairing: merged.pairing } : {}),
+            servings: merged.servings,
+            ...(merged.why ? { why: merged.why } : {}),
+            ingredients: merged.ingredients,
+            steps: merged.steps,
+            ...(merged.substitutions
+              ? { substitutions: merged.substitutions }
+              : {}),
+            ...(merged.sourceUrl ? { sourceUrl: merged.sourceUrl } : {}),
+            ...(merged.date ? { date: merged.date } : {}),
+            updatedAt: FieldValue.serverTimestamp(),
+          },
+          { merge: true },
+        )
+      stage(`public copy refreshed: "${merged.title}"`)
+    }
   }
   stage(`done: added ${added}, updated ${updated}, unchanged ${skipped}`)
 } catch (err) {

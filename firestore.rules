@@ -1,12 +1,26 @@
 rules_version = '2';
 
-// Lamba is a single-owner app. Every document lives under
+// Lamba data is private by default. Every personal document lives under
 // users/{uid}/... and only that signed-in owner can read or write it.
-// Everything else is denied by default.
+// The one exception is publicRecipes: recipes an owner chose to share.
+// Any signed-in user may read them, but only the author (matched by the
+// authorUid field) may create, update or delete their own. Everything
+// else is denied by default.
 service cloud.firestore {
   match /databases/{database}/documents {
     match /users/{userId}/{document=**} {
       allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+
+    match /publicRecipes/{recipeId} {
+      allow read: if request.auth != null;
+      allow create: if request.auth != null
+        && request.resource.data.authorUid == request.auth.uid;
+      allow update: if request.auth != null
+        && resource.data.authorUid == request.auth.uid
+        && request.resource.data.authorUid == request.auth.uid;
+      allow delete: if request.auth != null
+        && resource.data.authorUid == request.auth.uid;
     }
   }
 }

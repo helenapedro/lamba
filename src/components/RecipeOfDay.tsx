@@ -9,12 +9,15 @@ import {
 interface Props {
   recipes: Recipe[]
   onToggleFavorite: (recipe: Recipe, favorite: boolean) => void
+  onSaveDaily: (recipe: Recipe) => void
 }
 
 // The daily recipe card: today's suggested recipe when one is set for
 // today, otherwise the most recent daily recipe, labeled with its date.
 // The star marks it as a favorite, shared with the Recipes list.
-export default function RecipeOfDay({ recipes, onToggleFavorite }: Props) {
+// "Save recipe" keeps a private copy in the user's own recipes; without
+// it, the suggestion stays only on this card.
+export default function RecipeOfDay({ recipes, onToggleFavorite, onSaveDaily }: Props) {
   const today = todayStr()
   const { recipe, isToday } = dayRecipe(recipes, today)
 
@@ -26,6 +29,12 @@ export default function RecipeOfDay({ recipes, onToggleFavorite }: Props) {
       </div>
     )
   }
+
+  // Saved when the user's recipes already hold a copy of this title
+  // beyond the daily document itself.
+  const saved = recipes.some(
+    (r) => r.title === recipe.title && r.id !== recipe.id,
+  )
 
   return (
     <div className="card">
@@ -82,6 +91,20 @@ export default function RecipeOfDay({ recipes, onToggleFavorite }: Props) {
           </a>
         </p>
       )}
+      <div className="button-row">
+        <button
+          type="button"
+          disabled={saved}
+          onClick={() => onSaveDaily(recipe)}
+          aria-label={
+            saved
+              ? `${recipe.title} is already in your recipes`
+              : `Save ${recipe.title} to your recipes`
+          }
+        >
+          {saved ? 'Saved' : 'Save recipe'}
+        </button>
+      </div>
     </div>
   )
 }

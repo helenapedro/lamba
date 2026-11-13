@@ -3,6 +3,7 @@ import {
   MEAL_SLOTS,
   dateLabel,
   favoriteRecipes,
+  isPublic,
   recipesInSlot,
   slotLabel,
   type NewRecipe,
@@ -15,6 +16,7 @@ interface Props {
   onAdd: (recipe: NewRecipe) => void
   onRemove: (recipe: Recipe) => void
   onToggleFavorite: (recipe: Recipe, favorite: boolean) => void
+  onToggleVisibility: (recipe: Recipe, visibility: 'public' | 'private') => void
   query?: string
 }
 
@@ -23,6 +25,7 @@ export default function Recipes({
   onAdd,
   onRemove,
   onToggleFavorite,
+  onToggleVisibility,
   query = '',
 }: Props) {
   const [title, setTitle] = useState('')
@@ -143,6 +146,21 @@ export default function Recipes({
                     {slotLabel(recipe.mealSlot)}
                     {recipe.date ? ` · ${dateLabel(recipe.date)}` : ''}
                   </span>
+                </button>
+                <button
+                  type="button"
+                  className={isPublic(recipe) ? 'visibility-button active' : 'visibility-button'}
+                  aria-label={
+                    isPublic(recipe)
+                      ? `Make ${recipe.title} private`
+                      : `Make ${recipe.title} public`
+                  }
+                  aria-pressed={isPublic(recipe)}
+                  onClick={() =>
+                    onToggleVisibility(recipe, isPublic(recipe) ? 'private' : 'public')
+                  }
+                >
+                  {isPublic(recipe) ? 'Public' : 'Private'}
                 </button>
                 <button
                   type="button"

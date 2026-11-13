@@ -2,6 +2,8 @@ import { useState } from 'react'
 import ShoppingList from '../components/ShoppingList'
 import RecipeOfDay from '../components/RecipeOfDay'
 import Recipes from '../components/Recipes'
+import PublicRecipes from '../components/PublicRecipes'
+import Profile from '../components/Profile'
 import Products from '../components/Products'
 import Inventory from '../components/Inventory'
 import ExportButton from '../components/ExportButton'
@@ -10,7 +12,15 @@ import {
   normalizeName,
   parseShoppingQuantity,
 } from '../lib/shopping'
-import { dayRecipe, todayStr, type Recipe } from '../lib/recipes'
+import {
+  dailySaveCopy,
+  dayRecipe,
+  todayStr,
+  toPublicRecipe,
+  toSavedRecipe,
+  type PublicRecipe,
+  type Recipe,
+} from '../lib/recipes'
 import type { Product } from '../lib/products'
 import type { InventoryItem } from '../lib/inventory'
 import { locationForSection, sectionForLocation } from '../lib/inventory'
@@ -90,24 +100,70 @@ const INITIAL_PRODUCTS: Product[] = [
   },
 ]
 
-type View = 'home' | 'shopping' | 'recipes' | 'products' | 'inventory'
+const INITIAL_PUBLIC_RECIPES: PublicRecipe[] = [
+  {
+    id: 'pub1',
+    authorUid: 'other-user',
+    authorName: 'Maria',
+    title: 'Sopa de abóbora com gengibre',
+    mealSlot: 'dinner',
+    servings: 2,
+    why: 'Leve e reconfortante no inverno.',
+    ingredients: ['1 butternut squash', '1 tbsp fresh ginger'],
+    steps: 'Roast the squash, blend with ginger and stock.',
+  },
+]
+
+const MOCK_USER = {
+  photoURL: null,
+  displayName: 'Preview User',
+  email: 'preview@example.com',
+}
+
+type View =
+  | 'home'
+  | 'shopping'
+  | 'recipes'
+  | 'public'
+  | 'products'
+  | 'inventory'
+  | 'profile'
 
 const VIEWS: { id: View; label: string }[] = [
   { id: 'home', label: 'Home' },
   { id: 'shopping', label: 'Shopping' },
   { id: 'recipes', label: 'Recipes' },
+  { id: 'public', label: 'Public recipes' },
   { id: 'products', label: 'Products' },
   { id: 'inventory', label: 'At home' },
+  { id: 'profile', label: 'Profile' },
 ]
 
 export default function ShoppingPreview() {
   const [items, setItems] = useState<ShoppingItem[]>(INITIAL_ITEMS)
   const [recipes, setRecipes] = useState<Recipe[]>(INITIAL_RECIPES)
+  const [publicRecipes, setPublicRecipes] = useState<PublicRecipe[]>(INITIAL_PUBLIC_RECIPES)
   const [products, setProducts] = useState<Product[]>(INITIAL_PRODUCTS)
   const [inventory, setInventory] = useState<InventoryItem[]>(INITIAL_INVENTORY)
   const [query, setQuery] = useState('')
   const [view, setView] = useState<View>('home')
   const { recipe: homeRecipe, isToday } = dayRecipe(recipes, todayStr())
+
+  // In-memory mirror of useRecipes.saveCopy: upsert by title, so saving
+  // the same title twice never duplicates.
+  function saveCopyToRecipes(copy: Omit<Recipe, 'id'>, excludeId?: string) {
+    setRecipes((prev) => {
+      const existing = prev.find(
+        (r) => r.title === copy.title && r.id !== excludeId,
+      )
+      if (existing) {
+        return prev.map((r) =>
+          r.id === existing.id ? { ...existing, ...copy } : r,
+        )
+      }
+      return [...prev, { ...copy, id: `r${nextRecipeId++}` }]
+    })
+  }
 
   return (
     <main>
@@ -149,6 +205,9 @@ export default function ShoppingPreview() {
               setRecipes((prev) =>
                 prev.map((r) => (r.id === recipe.id ? { ...r, favorite } : r)),
               )
+            }
+            onSaveDaily={(recipe) =>
+              saveCopyToRecipes(dailySaveCopy(recipe), recipe.id)
             }
           />
           {isToday && homeRecipe?.fruit && (
@@ -235,13 +294,55 @@ export default function ShoppingPreview() {
         onAdd={(recipe) =>
           setRecipes((prev) => [...prev, { ...recipe, id: `r${nextRecipeId++}` }])
         }
-        onRemove={(recipe) => setRecipes((prev) => prev.filter((r) => r.id !== recipe.id))}
+        onRemove={(recipe) => {
+          setRecipes((prev) => prev.filter((r) => r.id !== recipe.id))
+          setPublicRecipes((prev) => prev.filter((p) => p.id !== recipe.id))
+        }}
         onToggleFavorite={(recipe, favorite) =>
           setRecipes((prev) =>
             prev.map((r) => (r.id === recipe.id ? { ...r, favorite } : r)),
           )
         }
+        onToggleVisibility={(recipe, visibility) => {
+          setRecipes((prev) =>
+            prev.map((r) =>
+              r.id === recipe.id ? { ...r, visibility } : r,
+            ),
+          )
+          setPublicRecipes((prev) => {
+            if (visibility === 'public') {
+              const pub: PublicRecipe = {
+                ...toPublicRecipe(recipe, 'preview-user', 'Preview User'),
+                id: recipe.id,
+              }
+              return prev.some((p) => p.id === recipe.id)
+                ? prev.map((p) => (p.id === recipe.id ? pub : p))
+                : [...prev, pub]
+            }
+            return prev.filter((p) => p.id !== recipe.id)
+          })
+        }}
         query={query}
+      />
+      )}
+      {view === 'public' && (
+      <PublicRecipes
+        publicRecipes={publicRecipes}
+        savedTitles={recipes.map((r) => r.title)}
+        onSaveCopy={(pub) => saveCopyToRecipes(toSavedRecipe(pub))}
+        query={query}
+      />
+      )}
+      {view === 'profile' && (
+      <Profile
+        user={MOCK_USER}
+        counts={{
+          recipes: recipes.length,
+          favorites: recipes.filter((r) => r.favorite).length,
+          shoppingItems: items.length,
+          inventoryItems: inventory.length,
+        }}
+        onSignOut={() => {}}
       />
       )}
       {view === 'products' && (
@@ -305,10 +406,6 @@ export default function ShoppingPreview() {
           products={products}
           inventory={inventory}
         />
-        {/* Layout mirror of the App footer; disabled in preview. */}
-        <button type="button" disabled>
-          Sign out
-        </button>
       </div>
     </main>
   )

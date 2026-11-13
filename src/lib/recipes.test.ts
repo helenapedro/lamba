@@ -1,12 +1,17 @@
 import { describe, expect, it } from 'vitest'
 import {
+  dailySaveCopy,
   dayRecipe,
   favoriteRecipes,
+  isPublic,
   latestDaily,
   recipeOn,
   recipesInSlot,
   sortRecipes,
   todayStr,
+  toPublicRecipe,
+  toSavedRecipe,
+  type PublicRecipe,
   type Recipe,
 } from './recipes'
 
@@ -110,5 +115,119 @@ describe('favoriteRecipes', () => {
       'Fav old',
     ])
     expect(favoriteRecipes(recipes)).toEqual([])
+  })
+})
+
+describe('isPublic', () => {
+  it('is false unless visibility is explicitly public', () => {
+    expect(isPublic(recipe({}))).toBe(false)
+    expect(isPublic(recipe({ visibility: 'private' }))).toBe(false)
+    expect(isPublic(recipe({ visibility: 'public' }))).toBe(true)
+  })
+})
+
+describe('toPublicRecipe', () => {
+  it('copies content fields with the author, and drops private fields', () => {
+    const pub = toPublicRecipe(
+      recipe({
+        title: 'Salad',
+        mealSlot: 'lunch',
+        pairing: 'Pita',
+        servings: 2,
+        why: 'Fresh.',
+        ingredients: ['chickpeas'],
+        steps: 'Mix.',
+        substitutions: 'No cumin.',
+        sourceUrl: 'https://example.com',
+        date: '2026-11-12',
+        favorite: true,
+        fruit: 'Kiwis.',
+        visibility: 'public',
+      }),
+      'uid-1',
+      'Helena',
+    )
+    expect(pub).toEqual({
+      authorUid: 'uid-1',
+      authorName: 'Helena',
+      title: 'Salad',
+      mealSlot: 'lunch',
+      pairing: 'Pita',
+      servings: 2,
+      why: 'Fresh.',
+      ingredients: ['chickpeas'],
+      steps: 'Mix.',
+      substitutions: 'No cumin.',
+      sourceUrl: 'https://example.com',
+      date: '2026-11-12',
+    })
+    expect(pub).not.toHaveProperty('favorite')
+    expect(pub).not.toHaveProperty('fruit')
+    expect(pub).not.toHaveProperty('visibility')
+  })
+  it('omits optional fields when absent', () => {
+    const pub = toPublicRecipe(recipe({ title: 'Plain' }), 'u', 'A')
+    expect(pub).not.toHaveProperty('pairing')
+    expect(pub).not.toHaveProperty('why')
+    expect(pub).not.toHaveProperty('substitutions')
+    expect(pub).not.toHaveProperty('sourceUrl')
+    expect(pub).not.toHaveProperty('date')
+  })
+})
+
+describe('dailySaveCopy', () => {
+  it('keeps the sync content fields and drops date, fruit and favorite', () => {
+    const copy = dailySaveCopy(
+      recipe({
+        title: 'Salad',
+        mealSlot: 'lunch',
+        pairing: 'Pita',
+        why: 'Fresh.',
+        ingredients: ['chickpeas'],
+        steps: 'Mix.',
+        substitutions: 'No cumin.',
+        sourceUrl: 'https://example.com',
+        date: '2026-11-12',
+        favorite: true,
+        fruit: 'Kiwis.',
+      }),
+    )
+    expect(copy).toEqual({
+      title: 'Salad',
+      mealSlot: 'lunch',
+      pairing: 'Pita',
+      servings: 2,
+      why: 'Fresh.',
+      ingredients: ['chickpeas'],
+      steps: 'Mix.',
+      substitutions: 'No cumin.',
+      sourceUrl: 'https://example.com',
+    })
+    expect(copy).not.toHaveProperty('date')
+    expect(copy).not.toHaveProperty('fruit')
+    expect(copy).not.toHaveProperty('favorite')
+    expect(copy).not.toHaveProperty('visibility')
+  })
+})
+
+describe('toSavedRecipe', () => {
+  it('copies a public recipe as a private recipe, without the author', () => {
+    const pub: PublicRecipe = {
+      id: 'pub-1',
+      authorUid: 'uid-2',
+      authorName: 'Someone',
+      title: 'Soup',
+      mealSlot: 'dinner',
+      servings: 2,
+      ingredients: ['lentils'],
+      steps: 'Simmer.',
+    }
+    expect(toSavedRecipe(pub)).toEqual({
+      title: 'Soup',
+      mealSlot: 'dinner',
+      servings: 2,
+      ingredients: ['lentils'],
+      steps: 'Simmer.',
+    })
   })
 })

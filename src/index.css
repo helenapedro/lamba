@@ -458,3 +458,86 @@ button {
   font: inherit;
   background: #fff;
 }
+
+/* Profile page */
+.profile-identity {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin: 8px 0 16px;
+}
+
+.profile-photo {
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.profile-photo-fallback {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #1a1a1a;
+  color: #faf7f2;
+  font-size: 2.5rem;
+}
+
+.profile-name {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin: 0 0 4px;
+}
+
+.profile-email {
+  color: #6b6257;
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.profile-counts {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.profile-count {
+  border: 1px solid #e5ded2;
+  border-radius: 10px;
+  padding: 12px;
+  text-align: center;
+}
+
+.profile-count-number {
+  display: block;
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.profile-count-label {
+  font-size: 0.85rem;
+  color: #6b6257;
+}
+
+.profile-note {
+  font-size: 0.9rem;
+  color: #6b6257;
+}
+
+/* Recipe visibility toggle */
+.recipe-head .visibility-button {
+  background: transparent;
+  color: #6b6257;
+  border: 1px solid #e5ded2;
+  font-size: 0.8rem;
+  padding: 6px 10px;
+  white-space: nowrap;
+}
+
+.recipe-head .visibility-button.active {
+  background: #1a1a1a;
+  color: #faf7f2;
+  border-color: #1a1a1a;
+}
